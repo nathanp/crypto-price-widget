@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Latest Crypto Prices</title>
+    <link href="https://fonts.googleapis.com/css?family=Heebo:100,400" rel="stylesheet">
+    <style type="text/css">
+      body {
+        background: #000;
+        font-family: 'Heebo', sans-serif;
+        color: #fff;
+      }
+      .titlebar {
+        -webkit-user-select: none;
+        -webkit-app-region: drag;
+        opacity: 0;
+      }
+        .titlebar:hover {
+          opacity: 1;
+        }
+        .titlebar .controls {
+          float: right;
+          line-height: 0;
+        }
+      button {
+        -webkit-app-region: no-drag;
+        background: none;
+        border: none;
+        outline: none;
+      }
+      
+      #close-btn,
+      #min-btn {
+        border: none;
+        font-size: 0;
+        height: 16px;
+        width: 16px;
+        border-radius: 100%;
+      }
+      #close-btn {
+        background: #ff0000;
+      }
+      #min-btn {
+        background: #ffa500;
+      }
+      #settings-btn {
+        padding: 0;
+
+      }
+      #settings-btn img {
+        width: 24px;
+        opacity: 0.5;
+      }
+        #settings-btn:hover img {
+          opacity: 1;
+        }
+
+      ul {
+        list-style-type: none;
+      }
+        #prices {
+          margin: 0;
+          padding: 0;
+          font-size: 36px;
+          font-weight: 100;
+        }
+          #prices li {
+            margin: 0px 0px 15px 0px;
+            padding: 0px 0px 15px 0px;
+            border-bottom: 1px solid #252525;
+          }
+            #prices li:last-child {
+              border-bottom: none;
+            }
+          #prices li span {
+            
+          }
+
+          .active {
+            display: block;
+          }
+          .inactive {
+            display: none;
+          }
+    </style>
+  </head>
+  <body>
+    <header style="-webkit-app-region: drag" class="titlebar">
+      <div class="controls">
+        <button id="min-btn" onclick="close()">minimize</button>
+        <button id="close-btn" onclick="close()">close</button>
+      </div>
+      <button id="settings-btn" onclick="toggleSettings()"><img src="images/icons8-Settings.png"></button>
+    </header>
+    <div id="main" class="panel active">
+      <ul id="prices">
+    </ul>
+        
+      <div>
+        Hello <span id="firstname"></span>
+      </div>
+        
+    </div>
+    
+    <div id="settings" class="panel inactive">
+      <h3>Choose Your Coins</h3>
+
+      <div id="coinsearch">
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+          <button type="button" style="background-color: #fff;" id="saveCoins">Click Me!</button>
+          <ul id="coinlist">
+            
+          </ul>
+      </div>
+
+      <h3>Choose Your Base Currency</h3>
+      <select id="base" onchange="setBase()">
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        <option value="GBP">GBP</option>
+        <option value="BTC">BTC</option>
+        <option value="LTC">LTC</option>
+        <option value="ETH">ETH</option>
+      </select>
+    </div>
+  </body>
+
+  <script>
+    // You can also require other files to run in this process
+    require('./renderer.js')
+  </script>
+  
+  <script>
+
+  (function() {
+
+    function loadJSON(callback) {   
+      var file = 'https://www.cryptocompare.com/api/data/coinlist/';
+      var xobj = new XMLHttpRequest();
+          xobj.overrideMimeType("application/json");
+          xobj.open('GET', file, true);
+          xobj.onreadystatechange = function () {
+            if (xobj.readyState == 4 && xobj.status == "200") {
+              // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+              callback(xobj.responseText);
+            }
+          };
+          xobj.send(null);  
+    }
+
+    loadJSON(function(response) {
+    // Parse JSON string into object
+      var myDiv = document.getElementById("coinlist");
+      var actual_JSON = JSON.parse(response);
+      //alert(settings.get('user.coins'));
+      //console.log(actual_JSON.Data);
+      
+      Object.keys(actual_JSON.Data).forEach(function(key) {
+
+        //console.log(actual_JSON.Data[key].Name);
+        //console.log(actual_JSON.Data[key].CoinName);
+        var li = document.createElement("li");
+        var checkBox = document.createElement("input");
+          checkBox.className = "coinCode";
+        var label = document.createElement("label");
+          label.className = "coinName";
+        checkBox.type = "checkbox";
+        checkBox.value = actual_JSON.Data[key].Name;
+        checkBox.name = "cl[]";
+        //check the coins the user has already set
+        var str = String(settings.get('user.coins'));
+        var split_str = str.split(",");
+        if (split_str.indexOf(actual_JSON.Data[key].Name) !== -1) {
+            checkBox.checked = true;
+        }
+        myDiv.appendChild(li);
+        li.appendChild(checkBox);
+        li.appendChild(label);
+        label.appendChild(document.createTextNode(actual_JSON.Data[key].CoinName));
+        label.appendChild(document.createTextNode(' ('+actual_JSON.Data[key].Name+')'));
+    });
+      
+   });
+   
+    base = 'USD';
+    setBase = function() {
+
+      //selected base currency
+      var x = document.getElementById("base").selectedIndex;
+      var y = document.getElementById("base").options;
+      base = y[x].text;
+    };
+    
+  })();
+
+    function createNode(element) {
+        return document.createElement(element);
+    }
+    function append(parent, el) {
+      return parent.appendChild(el);
+    }
+
+
+
+
+    //user settings
+const settings = require('electron-settings');
+settings.set('name', {
+  first: 'Nathan',
+  last: 'Parikh'
+});
+
+// Returns an array with values of the selected (checked) checkboxes in "frm"
+function getSelectedChbox(frm) {
+ // JavaScript & jQuery Course - http://coursesweb.net/javascript/
+  var selchbox = [];        // array that will store the value of selected checkboxes
+
+  // gets all the input tags in frm, and their number
+  var inpfields = frm.getElementsByTagName('input');
+  var nr_inpfields = inpfields.length;
+
+  // traverse the inpfields elements, and adds the value of selected (checked) checkbox in selchbox
+  for(var i=0; i<nr_inpfields; i++) {
+    if(inpfields[i].type == 'checkbox' && inpfields[i].checked == true) selchbox.push(inpfields[i].value);
+  }
+
+  return selchbox;
+}
+
+  /* Test this function */
+document.getElementById('firstname').innerHTML = settings.get('user.coins');
+// When click on #btntest, alert the selected values
+document.getElementById('saveCoins').onclick = function(){
+  var coinForm = document.getElementById('coinlist');
+  var selchb = getSelectedChbox(coinForm);     // gets the array returned by getSelectedChbox()
+  alert(selchb);
+
+  settings.set('user', {
+    coins: selchb
+  });
+
+  var selectedCoins = settings.get('user.coins');
+  document.getElementById('firstname').innerHTML = selectedCoins;
+}
+
+    const ul = document.getElementById('prices'); // Get the list where we will place our authors
+    const url = 'https://min-api.cryptocompare.com/data/pricemultifull?fsyms='+settings.get('user.coins') +'&tsyms='+base +'&extraParams=your_app_name';
+    
+    function initData() {
+      fetch(url)
+        .then(  
+          function(response) {  
+            if (response.status !== 200) {  
+              console.log('Looks like there was a problem. Status Code: ' +  
+                response.status);  
+              return;  
+            }
+
+            // Examine the text in the response  
+            response.json().then(function(data) { 
+              //console.log(data);
+
+              let prices = data.DISPLAY;
+              var i = 0;
+              for (let key of Object.keys(prices)) {
+                let coin = prices[key];
+                //console.log(coin);
+                let li = createNode('li'),
+                    span = createNode('span');
+                li.setAttribute("class", "price");
+                li.setAttribute("id", "coin-"+[key]);
+                //alert("coin-"+[key])
+                //console.log(settings.get('coin.'+[key]+'.order'));
+                li.setAttribute("sortorder", settings.get(li.id+'.order'));
+                //alert(settings.get(li.id+'.order'));
+                span.innerHTML = coin.USD.FROMSYMBOL + ' ' + coin.USD.PRICE + settings.get('coin.'+i+'.order');
+                append(li, span);
+                append(ul, li);
+                i++;
+              }
+              //console.log(data.RAW.BTC.USD.PRICE)
+
+              sortChildren(
+                  document.getElementById('prices'),
+                  function(li) { return +li.getAttribute('sortorder') }
+              );
+
+              //sort your coins
+              sortable('#prices', {
+                handle: 'span'
+              })[0].addEventListener('sortstop', function(e) {
+
+
+                // Declare variables
+                var ul, li, i;
+                ul = document.getElementById("prices");
+                li = ul.getElementsByTagName('li');
+
+                // Loop through all list items, and hide those who don't match the search query
+                for (i = 0; i < li.length; i++) {
+                   li[i].setAttribute("sortorder", i);
+                   var elementID = li[i].id;
+                   //alert(elementID);
+                   
+                   settings.set(elementID, { // coin-BTC
+                    order: li[i].getAttribute('sortorder')
+                  });
+                  
+                  //alert(settings.get(elementID + '.order'));
+                }
+                
+                //alert(settings.get('coin.'+e+'.order'));
+                /*               
+                
+                */
+                //
+                //now figure out how to sort by attribute sortorder on load
+                /*
+
+                This event is triggered when the user stopped sorting and the DOM position has changed.
+
+                e.detail.item contains the current dragged element.
+                e.detail.index contains the new index of the dragged element (considering only list items)
+                e.detail.oldindex contains the old index of the dragged element (considering only list items)
+                e.detail.elementIndex contains the new index of the dragged element (considering all items within sortable)
+                e.detail.oldElementIndex contains the old index of the dragged element (considering all items within sortable)
+                e.detail.startparent contains the element that the dragged item comes from
+                e.detail.endparent contains the element that the dragged item was added to (new parent)
+                e.detail.newEndList contains all elements in the list the dragged item was dragged to
+                e.detail.newStartList contains all elements in the list the dragged item was dragged from
+                e.detail.oldStartList contains all elements in the list the dragged item was dragged from BEFORE it was dragged from it
+                */
+            });
+              
+
+            });  
+          }  
+        )  
+        .catch(function(err) {  
+          console.log('Fetch Error :-S', err);  
+        });
+        updateData();
+  }
+
+  function updateData() {
+      const url = 'https://min-api.cryptocompare.com/data/pricemultifull?fsyms='+settings.get('user.coins') +'&tsyms='+base +'&extraParams=your_app_name';
+      fetch(url)
+        .then(
+          function(response) {  
+            if (response.status !== 200) {  
+              console.log('Looks like there was a problem. Status Code: ' +  
+                response.status);  
+              return;  
+            }
+            // Examine the text in the response  
+            response.json().then(function(data) { 
+              let prices = data.DISPLAY;
+              for (let key of Object.keys(prices)) {
+                let coin = prices[key];
+                //console.log(coin);
+                let li = document.getElementById("coin-"+[key]),
+                    span = document.querySelector("#coin-"+[key]+" span");
+                //console.log(span);
+                span.innerHTML = coin[base].FROMSYMBOL + ' ' + coin[base].PRICE;
+              }
+            });  
+          }  
+        )
+      setTimeout(function(){updateData()}, 1000);
+  }
+
+initData();
+
+//controls
+const remote = require('electron').remote;
+document.getElementById("close-btn").addEventListener("click", function (e) {
+       var window = remote.getCurrentWindow();
+       window.close();
+  });
+
+document.getElementById("min-btn").addEventListener("click", function (e) {
+       var window = remote.getCurrentWindow();
+       window.minimize(); 
+  });
+
+//settings
+function toggleSettings() {
+  //var div = document.getElementsByClassName("panel");
+  var divs = document.getElementsByClassName('panel'), i;
+  //console.log(div);
+  for (i = 0; i < divs.length; ++i) {
+    if(divs[i].classList.contains('inactive')) {
+      divs[i].classList.remove('inactive');
+      divs[i].classList.add('active');
+    }
+    else {
+      divs[i].classList.remove('active');
+      divs[i].classList.add('inactive');
+    }
+  }
+}
+
+//search
+function myFunction() {
+    // Declare variables
+    var input, filter, ul, li, a, i;
+    input = document.getElementById('myInput');
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("coinlist");
+    li = ul.getElementsByTagName('li');
+
+    // Loop through all list items, and hide those who don't match the search query
+    for (i = 0; i < li.length; i++) {
+        label = li[i].getElementsByTagName("label")[0];
+        checkbox = li[i].getElementsByTagName("input")[0].value;
+        if (label.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+  }
+
+//sort by attribute
+function sortChildren(wrap, f, isNum) {
+    var l = wrap.children.length,
+        arr = new Array(l);
+    for(var i=0; i<l; ++i)
+        arr[i] = [f(wrap.children[i]), wrap.children[i]];
+    arr.sort(isNum
+        ? function(a,b){ return a[0]-b[0]; }
+        : function(a,b){ return a[0]<b[0] ? -1 : a[0]>b[0] ? 1 : 0; }
+    );
+    var par = wrap.parentNode,
+        ref = wrap.nextSibling;
+    par.removeChild(wrap);
+    for(var i=0; i<l; ++i) wrap.appendChild(arr[i][1]);
+    par.insertBefore(wrap, ref);
+}
+
+
+    </script>
+    <script src="js/html.sortable.min.js"></script>
+    <script type="text/javascript">
+      //sort your coins
+
+      
+      
+      
+    </script>
+</html>

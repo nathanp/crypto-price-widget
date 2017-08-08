@@ -1,0 +1,34 @@
+{
+  "name": "crypto-price-widget",
+  "version": "1.0.0",
+  "description": "A cross-platform app for tracking Crypto prices",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "node build.js"
+  },
+  "repository": "https://github.com/electron/electron-quick-start",
+  "keywords": [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo"
+  ],
+  "author": "GitHub",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "~1.6.2"
+  },
+  "dependencies": {
+    "ava": "^0.15.2",
+    "cryptocurrencies": "^1.0.0",
+    "electron-settings": "^3.1.1",
+    "electron-window-state": "^4.1.1",
+    "html5sortable": "^0.6.1",
+    "isomorphic-fetch": "^2.2.1",
+    "lodash.sortby": "^4.7.0",
+    "sortablejs": "^1.6.0",
+    "xo": "^0.16.0"
+  }
+}
