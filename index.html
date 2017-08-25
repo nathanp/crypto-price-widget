@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <title>Latest Crypto Prices</title>
     <link href="https://fonts.googleapis.com/css?family=Heebo:100,400" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
     <style type="text/css">
+      /*@import url('https://rsms.me/interface/interface.css');*/
       body {
         background: #000;
-        font-family: 'Heebo', sans-serif;
+        /*font-family: 'Heebo', sans-serif;*/
+        font-family: 'Inconsolata', monospace;
         color: #fff;
       }
       .titlebar {
@@ -61,8 +64,8 @@
         #prices {
           margin: 0;
           padding: 0;
-          font-size: 36px;
-          font-weight: 100;
+          font-size: 28px;
+          font-weight: 400;
         }
           #prices li {
             margin: 0px 0px 15px 0px;
@@ -82,8 +85,97 @@
           .inactive {
             display: none;
           }
+          
+          /*Settings Page*/
+          #myInput {
+            font-family: 'Inconsolata', monospace;
+            border: none;
+            padding: 0px 0px 10px;
+            font-size: 14px;
+            background: #000;
+            color: #fff;
+            outline: none;
+            border-bottom: 1px solid #252525;
+            display: block;
+            width: 100%;
+          }
+          #saveCoins {
+            background-color: #000000;
+            color: #fff;
+            border: 1px solid #252525;
+            padding: 5px 10px;
+            margin: -1px 0px 0px 0px;
+            font-family: 'Inconsolata', monospace;
+          }
+          #coinlist {
+            margin: 15px 0px 0px 0px;
+            padding: 0;
+            max-height: 240px;
+            overflow: scroll;
+          }
+          
+          /*Scrollbar*/
+          ::-webkit-scrollbar,
+          ::-webkit-scrollbar-corner {
+            background-color: black;
+          }
+          ::-webkit-scrollbar {     
+            width: .5em;
+          }
+
+          ::-webkit-scrollbar-thumb:window-inactive,
+          ::-webkit-scrollbar-thumb {
+            background:  #252525;
+            -webkit-border-radius: 100px;
+          }
+
+          /*Select Boxes*/
+          .custom-select {
+            position: relative;
+            display: inline-block;
+          }
+          .custom-select select {
+            display: inline-block;
+            border: 1px solid #252525;
+            padding: 4px 3px 3px 5px;
+            margin: 0;
+            font: inherit;
+            outline: none;
+            line-height: 1.2;
+            background: #000000;
+            -webkit-appearance: none;
+            width: 145px;
+            color: #fff;
+          }
+          /* for Webkit's CSS-only solution */
+          @media screen and (-webkit-min-device-pixel-ratio:0) { 
+            .custom-select select {
+                padding-right:30px;    
+            }
+          }
+          /* Since we removed the default focus styles, we have to add our own */
+          .custom-select select:focus {
+            -webkit-box-shadow: 0 0 3px 1px #00afc1;
+            -moz-box-shadow: 0 0 3px 1px #00afc1;
+            box-shadow: 0 0 3px 1px #00afc1;
+          }
+          /* Select arrow styling */
+          .custom-select:after {
+            content: "▼";
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            font-size: 60%;
+            line-height: 30px;
+            padding: 0 7px;
+            background: #252525;
+            color: white;
+            pointer-events: none;
+          }
     </style>
   </head>
+
   <body>
     <header style="-webkit-app-region: drag" class="titlebar">
       <div class="controls">
@@ -92,37 +184,35 @@
       </div>
       <button id="settings-btn" onclick="toggleSettings()"><img src="images/icons8-Settings.png"></button>
     </header>
+
     <div id="main" class="panel active">
       <ul id="prices">
-    </ul>
-        
-      <div>
-        Hello <span id="firstname"></span>
-      </div>
-        
-    </div>
+      </ul>
+    </div><!-- #main -->
     
     <div id="settings" class="panel inactive">
       <h3>Choose Your Coins</h3>
 
       <div id="coinsearch">
-        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
-          <button type="button" style="background-color: #fff;" id="saveCoins">Click Me!</button>
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Type here to filter list">
+          <button type="button" id="saveCoins">Save</button>
           <ul id="coinlist">
-            
           </ul>
-      </div>
+      </div><!-- #coinsearch -->
 
       <h3>Choose Your Base Currency</h3>
-      <select id="base" onchange="setBase()">
-        <option value="USD">USD</option>
-        <option value="EUR">EUR</option>
-        <option value="GBP">GBP</option>
-        <option value="BTC">BTC</option>
-        <option value="LTC">LTC</option>
-        <option value="ETH">ETH</option>
-      </select>
-    </div>
+      <label class="custom-select">
+        <select id="base" onchange="setBase()">
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="GBP">GBP</option>
+          <option value="BTC">BTC</option>
+          <option value="LTC">LTC</option>
+          <option value="ETH">ETH</option>
+        </select>
+      </label>
+    </div><!-- #settings -->
+
   </body>
 
   <script>
@@ -131,7 +221,9 @@
   </script>
   
   <script>
-
+  /******************
+  * APP FUNCTIONALITY
+  ******************/
   (function() {
 
     function loadJSON(callback) {   
@@ -146,17 +238,18 @@
             }
           };
           xobj.send(null);  
-    }
+    } //loadJSON
 
+    // Generate the list of all coins
     loadJSON(function(response) {
-    // Parse JSON string into object
+      // Parse JSON string into object
       var myDiv = document.getElementById("coinlist");
       var actual_JSON = JSON.parse(response);
       //alert(settings.get('user.coins'));
       //console.log(actual_JSON.Data);
       
+      //loop through data, get coin info, generate checkbox fore each coin
       Object.keys(actual_JSON.Data).forEach(function(key) {
-
         //console.log(actual_JSON.Data[key].Name);
         //console.log(actual_JSON.Data[key].CoinName);
         var li = document.createElement("li");
@@ -178,13 +271,12 @@
         li.appendChild(label);
         label.appendChild(document.createTextNode(actual_JSON.Data[key].CoinName));
         label.appendChild(document.createTextNode(' ('+actual_JSON.Data[key].Name+')'));
-    });
+      }); //forEach
       
-   });
+    }); //loadJSON
    
     base = 'USD';
     setBase = function() {
-
       //selected base currency
       var x = document.getElementById("base").selectedIndex;
       var y = document.getElementById("base").options;
@@ -193,153 +285,135 @@
     
   })();
 
-    function createNode(element) {
-        return document.createElement(element);
-    }
-    function append(parent, el) {
-      return parent.appendChild(el);
-    }
-
-
-
-
-    //user settings
-const settings = require('electron-settings');
-settings.set('name', {
-  first: 'Nathan',
-  last: 'Parikh'
-});
-
-// Returns an array with values of the selected (checked) checkboxes in "frm"
-function getSelectedChbox(frm) {
- // JavaScript & jQuery Course - http://coursesweb.net/javascript/
-  var selchbox = [];        // array that will store the value of selected checkboxes
-
-  // gets all the input tags in frm, and their number
-  var inpfields = frm.getElementsByTagName('input');
-  var nr_inpfields = inpfields.length;
-
-  // traverse the inpfields elements, and adds the value of selected (checked) checkbox in selchbox
-  for(var i=0; i<nr_inpfields; i++) {
-    if(inpfields[i].type == 'checkbox' && inpfields[i].checked == true) selchbox.push(inpfields[i].value);
+  //Functions for creating/appending elements
+  function createNode(element) {
+      return document.createElement(element);
+  }
+  function append(parent, el) {
+    return parent.appendChild(el);
   }
 
-  return selchbox;
-}
-
-  /* Test this function */
-document.getElementById('firstname').innerHTML = settings.get('user.coins');
-// When click on #btntest, alert the selected values
-document.getElementById('saveCoins').onclick = function(){
-  var coinForm = document.getElementById('coinlist');
-  var selchb = getSelectedChbox(coinForm);     // gets the array returned by getSelectedChbox()
-  alert(selchb);
-
-  settings.set('user', {
-    coins: selchb
+  //user settings
+  const settings = require('electron-settings');
+  settings.set('name', {
+    first: 'Nathan',
+    last: 'Parikh'
   });
 
-  var selectedCoins = settings.get('user.coins');
-  document.getElementById('firstname').innerHTML = selectedCoins;
-}
+  // Returns an array with values of the selected (checked) checkboxes in "frm"
+  function getSelectedChbox(frm) {
+    var selchbox = []; // array that will store the value of selected checkboxes
+    // gets all the input tags in frm, and their number
+    var inpfields = frm.getElementsByTagName('input');
+    var nr_inpfields = inpfields.length;
+    // traverse the inpfields elements, and adds the value of selected (checked) checkbox in selchbox
+    for(var i=0; i<nr_inpfields; i++) {
+      if(inpfields[i].type == 'checkbox' && inpfields[i].checked == true) selchbox.push(inpfields[i].value);
+    }
+    return selchbox;
+  }
 
-    const ul = document.getElementById('prices'); // Get the list where we will place our authors
-    const url = 'https://min-api.cryptocompare.com/data/pricemultifull?fsyms='+settings.get('user.coins') +'&tsyms='+base +'&extraParams=your_app_name';
-    
-    function initData() {
-      fetch(url)
-        .then(  
-          function(response) {  
-            if (response.status !== 200) {  
-              console.log('Looks like there was a problem. Status Code: ' +  
-                response.status);  
-              return;  
+  /* Test this function */
+  //document.getElementById('firstname').innerHTML = settings.get('user.coins');
+  // Click on #saveCoins, save the coin selection to the user
+  document.getElementById('saveCoins').onclick = function(){
+    var coinForm = document.getElementById('coinlist');
+    var selchb = getSelectedChbox(coinForm); // gets the array returned by getSelectedChbox()
+    alert(selchb);
+
+    settings.set('user', {
+      coins: selchb
+    });
+
+    var selectedCoins = settings.get('user.coins');
+    //document.getElementById('firstname').innerHTML = selectedCoins;
+  }
+
+  const ul = document.getElementById('prices'); // Get the list where we will place coins
+  const url = 'https://min-api.cryptocompare.com/data/pricemultifull?fsyms='+settings.get('user.coins') +'&tsyms='+base +'&extraParams=your_app_name';
+  
+  function initData() {
+    fetch(url)
+      .then(  
+        function(response) {  
+          if (response.status !== 200) {  
+            console.log('Looks like there was a problem. Status Code: ' +  
+              response.status);  
+            return;  
+          }
+
+          // Examine the response  
+          response.json().then(function(data) {
+            //console.log(data);
+            let prices = data.DISPLAY;
+            var i = 0;
+            for (let key of Object.keys(prices)) {
+              let coin = prices[key];
+              //console.log(coin);
+              let li = createNode('li'),
+                  span = createNode('span');
+              li.setAttribute("class", "price");
+              li.setAttribute("id", "coin-"+[key]);
+              //alert("coin-"+[key])
+              //console.log(settings.get('coin.'+[key]+'.order'));
+              li.setAttribute("sortorder", settings.get(li.id+'.order'));
+              //alert(settings.get(li.id+'.order'));
+              span.innerHTML = coin.USD.FROMSYMBOL + ' ' + coin.USD.PRICE + settings.get('coin.'+i+'.order');
+              append(li, span);
+              append(ul, li);
+              i++;
             }
+            //console.log(data.RAW.BTC.USD.PRICE)
 
-            // Examine the text in the response  
-            response.json().then(function(data) { 
-              //console.log(data);
+            sortChildren(
+                document.getElementById('prices'),
+                function(li) { return +li.getAttribute('sortorder') }
+            );
 
-              let prices = data.DISPLAY;
-              var i = 0;
-              for (let key of Object.keys(prices)) {
-                let coin = prices[key];
-                //console.log(coin);
-                let li = createNode('li'),
-                    span = createNode('span');
-                li.setAttribute("class", "price");
-                li.setAttribute("id", "coin-"+[key]);
-                //alert("coin-"+[key])
-                //console.log(settings.get('coin.'+[key]+'.order'));
-                li.setAttribute("sortorder", settings.get(li.id+'.order'));
-                //alert(settings.get(li.id+'.order'));
-                span.innerHTML = coin.USD.FROMSYMBOL + ' ' + coin.USD.PRICE + settings.get('coin.'+i+'.order');
-                append(li, span);
-                append(ul, li);
-                i++;
+            //sort your coins
+            sortable('#prices', {
+              handle: 'span'
+            })[0].addEventListener('sortstop', function(e) {
+              // Declare variables
+              var ul, li, i;
+              ul = document.getElementById("prices");
+              li = ul.getElementsByTagName('li');
+
+              // Loop through all list items
+              for (i = 0; i < li.length; i++) {
+                 li[i].setAttribute("sortorder", i);
+                 var elementID = li[i].id;
+                 //alert(elementID);
+                 settings.set(elementID, { // coin-BTC
+                  order: li[i].getAttribute('sortorder')
+                });
+                //alert(settings.get(elementID + '.order'));
               }
-              //console.log(data.RAW.BTC.USD.PRICE)
+              //alert(settings.get('coin.'+e+'.order'));
 
-              sortChildren(
-                  document.getElementById('prices'),
-                  function(li) { return +li.getAttribute('sortorder') }
-              );
+              /*
+              This event is triggered when the user stopped sorting and the DOM position has changed.
 
-              //sort your coins
-              sortable('#prices', {
-                handle: 'span'
-              })[0].addEventListener('sortstop', function(e) {
+              e.detail.item contains the current dragged element.
+              e.detail.index contains the new index of the dragged element (considering only list items)
+              e.detail.oldindex contains the old index of the dragged element (considering only list items)
+              e.detail.elementIndex contains the new index of the dragged element (considering all items within sortable)
+              e.detail.oldElementIndex contains the old index of the dragged element (considering all items within sortable)
+              e.detail.startparent contains the element that the dragged item comes from
+              e.detail.endparent contains the element that the dragged item was added to (new parent)
+              e.detail.newEndList contains all elements in the list the dragged item was dragged to
+              e.detail.newStartList contains all elements in the list the dragged item was dragged from
+              e.detail.oldStartList contains all elements in the list the dragged item was dragged from BEFORE it was dragged from it
+              */
+            }); //sortable
 
-
-                // Declare variables
-                var ul, li, i;
-                ul = document.getElementById("prices");
-                li = ul.getElementsByTagName('li');
-
-                // Loop through all list items, and hide those who don't match the search query
-                for (i = 0; i < li.length; i++) {
-                   li[i].setAttribute("sortorder", i);
-                   var elementID = li[i].id;
-                   //alert(elementID);
-                   
-                   settings.set(elementID, { // coin-BTC
-                    order: li[i].getAttribute('sortorder')
-                  });
-                  
-                  //alert(settings.get(elementID + '.order'));
-                }
-                
-                //alert(settings.get('coin.'+e+'.order'));
-                /*               
-                
-                */
-                //
-                //now figure out how to sort by attribute sortorder on load
-                /*
-
-                This event is triggered when the user stopped sorting and the DOM position has changed.
-
-                e.detail.item contains the current dragged element.
-                e.detail.index contains the new index of the dragged element (considering only list items)
-                e.detail.oldindex contains the old index of the dragged element (considering only list items)
-                e.detail.elementIndex contains the new index of the dragged element (considering all items within sortable)
-                e.detail.oldElementIndex contains the old index of the dragged element (considering all items within sortable)
-                e.detail.startparent contains the element that the dragged item comes from
-                e.detail.endparent contains the element that the dragged item was added to (new parent)
-                e.detail.newEndList contains all elements in the list the dragged item was dragged to
-                e.detail.newStartList contains all elements in the list the dragged item was dragged from
-                e.detail.oldStartList contains all elements in the list the dragged item was dragged from BEFORE it was dragged from it
-                */
-            });
-              
-
-            });  
-          }  
-        )  
-        .catch(function(err) {  
-          console.log('Fetch Error :-S', err);  
-        });
-        updateData();
+          }); //response.json
+        } //function(response)
+      ) //.then
+      .catch(function(err) {  
+        console.log('Fetch Error :-S', err);  
+      });
+      updateData();
   }
 
   function updateData() {
@@ -354,54 +428,58 @@ document.getElementById('saveCoins').onclick = function(){
             }
             // Examine the text in the response  
             response.json().then(function(data) { 
-              let prices = data.DISPLAY;
-              for (let key of Object.keys(prices)) {
-                let coin = prices[key];
-                //console.log(coin);
+              let pricesDISPLAY = data.DISPLAY; // display for everything except coin symbol
+              let pricesRAW     = data.RAW; // raw to get BTC instead of bitcoin symbol
+              for (let key of Object.keys(pricesRAW)) {
+                let coinDISPLAY = pricesDISPLAY[key];
+                let coinRAW = pricesRAW[key];
+                console.log(coinDISPLAY);
                 let li = document.getElementById("coin-"+[key]),
                     span = document.querySelector("#coin-"+[key]+" span");
                 //console.log(span);
-                span.innerHTML = coin[base].FROMSYMBOL + ' ' + coin[base].PRICE;
+                span.innerHTML = coinRAW[base].FROMSYMBOL + ' ' + coinDISPLAY[base].PRICE.replace(/ /g,''); //.replace(/ /g,'') removes space after $
               }
             });  
           }  
         )
-      setTimeout(function(){updateData()}, 1000);
+      setTimeout(function(){updateData()}, 1000); // run this once every second
   }
 
-initData();
+  // Let's do this thing!
+  initData();
 
-//controls
-const remote = require('electron').remote;
-document.getElementById("close-btn").addEventListener("click", function (e) {
-       var window = remote.getCurrentWindow();
-       window.close();
+  /*******
+  * APP UI
+  ********/
+
+  //Window controls
+  const remote = require('electron').remote;
+  document.getElementById("close-btn").addEventListener("click", function (e) {
+    var window = remote.getCurrentWindow();
+    window.close();
+  });
+  document.getElementById("min-btn").addEventListener("click", function (e) {
+    var window = remote.getCurrentWindow();
+    window.minimize(); 
   });
 
-document.getElementById("min-btn").addEventListener("click", function (e) {
-       var window = remote.getCurrentWindow();
-       window.minimize(); 
-  });
+  //settings tab/icon
+  function toggleSettings() {
+    var divs = document.getElementsByClassName('panel'), i;
+    for (i = 0; i < divs.length; ++i) {
+      if(divs[i].classList.contains('inactive')) {
+        divs[i].classList.remove('inactive');
+        divs[i].classList.add('active');
+      }
+      else {
+        divs[i].classList.remove('active');
+        divs[i].classList.add('inactive');
+      }
+    }//for
+  }//toggleSettings
 
-//settings
-function toggleSettings() {
-  //var div = document.getElementsByClassName("panel");
-  var divs = document.getElementsByClassName('panel'), i;
-  //console.log(div);
-  for (i = 0; i < divs.length; ++i) {
-    if(divs[i].classList.contains('inactive')) {
-      divs[i].classList.remove('inactive');
-      divs[i].classList.add('active');
-    }
-    else {
-      divs[i].classList.remove('active');
-      divs[i].classList.add('inactive');
-    }
-  }
-}
-
-//search
-function myFunction() {
+  //Coin search filter
+  function myFunction() {
     // Declare variables
     var input, filter, ul, li, a, i;
     input = document.getElementById('myInput');
@@ -411,18 +489,18 @@ function myFunction() {
 
     // Loop through all list items, and hide those who don't match the search query
     for (i = 0; i < li.length; i++) {
-        label = li[i].getElementsByTagName("label")[0];
-        checkbox = li[i].getElementsByTagName("input")[0].value;
-        if (label.innerHTML.toUpperCase().indexOf(filter) > -1) {
-            li[i].style.display = "";
-        } else {
-            li[i].style.display = "none";
-        }
-    }
-  }
+      label = li[i].getElementsByTagName("label")[0];
+      checkbox = li[i].getElementsByTagName("input")[0].value;
+      if (label.innerHTML.toUpperCase().indexOf(filter) > -1) {
+          li[i].style.display = "";
+      } else {
+          li[i].style.display = "none";
+      }
+    } //for
+  } //myFunction
 
-//sort by attribute
-function sortChildren(wrap, f, isNum) {
+  //sort by attribute
+  function sortChildren(wrap, f, isNum) {
     var l = wrap.children.length,
         arr = new Array(l);
     for(var i=0; i<l; ++i)
@@ -436,16 +514,8 @@ function sortChildren(wrap, f, isNum) {
     par.removeChild(wrap);
     for(var i=0; i<l; ++i) wrap.appendChild(arr[i][1]);
     par.insertBefore(wrap, ref);
-}
+  } //sortChildren
 
-
-    </script>
-    <script src="js/html.sortable.min.js"></script>
-    <script type="text/javascript">
-      //sort your coins
-
-      
-      
-      
-    </script>
+  </script>
+  <script src="js/html.sortable.min.js"></script>
 </html>
