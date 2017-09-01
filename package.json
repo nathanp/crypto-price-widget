@@ -1,12 +1,15 @@
 {
   "name": "crypto-price-widget",
-  "productName": "crypto-price-widget",
+  "productName": "Crypto Price Widget",
   "version": "1.0.0",
   "description": "A cross-platform app for tracking Crypto prices",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "node build.js"
+    "build": "node build.js",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=images/icon.icns --prune=true --out=release-builds",
+    "package-win": "electron-packager . --overwrite --asar=true --platform=win32 --arch=ia32 --icon=images/icon_win.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Crypto Price Widget\"",
+    "package-linux" : "electron-packager . --overwrite --platform=linux --arch=x64 --icon=images/icon.png --prune=true --out=release-builds"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
