@@ -8,10 +8,13 @@
     <style type="text/css">
       /*@import url('https://rsms.me/interface/interface.css');*/
       body {
-        background: #000;
-        /*font-family: 'Heebo', sans-serif;*/
+        background: rgba(0, 0, 0, 0.95);
         font-family: 'Inconsolata', monospace;
         color: #fff;
+      }
+      ul {
+        margin: 0;
+        padding: 0;
       }
       .titlebar {
         -webkit-user-select: none;
@@ -75,9 +78,94 @@
             #prices li:last-child {
               border-bottom: none;
             }
-          #prices li span {
-            
-          }
+            #prices li span {
+              
+            }
+            #prices li span.draggable {
+              width: 100%;
+            }
+            #prices li .sym {
+              border: 1px solid #252525;
+              border-left-width: 2px;
+              padding: 0px 5px 0px;
+              font-family: 'Heebo', sans-serif;
+              font-size: 12px;
+            }
+              #prices li .sym:hover {
+                cursor: -webkit-grab;
+              }
+              /*Symbol Colors*/
+              #prices li#coin-BTC .sym {
+                border-left-color: #F9A847;
+              }
+              #prices li#coin-XRP .sym {
+                border-left-color: #0997D2;
+              }
+              #prices li#coin-LTC .sym {
+                border-left-color: #F1F1F1;
+              }
+              #prices li#coin-NEO .sym,
+              #prices li#coin-GAS .sym {
+                border-left-color: #9CD115;
+              }
+              #prices li#coin-OMG .sym {
+                border-left-color: #1A53F0;
+              }
+              #prices li#coin-BCH .sym {
+                border-left-color: #F7931A;
+              }
+              #prices li#coin-DASH .sym {
+                border-left-color: #0475B6;
+              }
+              #prices li#coin-XMR .sym {
+                border-left-color: #FF6600;
+              }
+              #prices li#coin-ETC .sym {
+                border-left-color: #689274;
+              }
+               #prices li#coin-ZEC .sym {
+                border-left-color: #EFB948;
+              }
+               #prices li#coin-GNT .sym {
+                border-left-color: #00AFBF;
+              }
+               #prices li#coin-BAT .sym {
+                border-left-color: #662F92;
+              }
+               #prices li#coin-FCT .sym {
+                border-left-color: #E3A77D;
+              }
+               #prices li#coin-ARK .sym {
+                border-left-color: #CB0101;
+              }
+               #prices li#coin-DOGE .sym {
+                border-left-color: #BBA034;
+              }
+               #prices li#coin-CVC .sym {
+                border-left-color: #41BB2E;
+              }
+               #prices li#coin-MCO .sym {
+                border-left-color: #82344C;
+              }
+               #prices li#coin-UBQ .sym {
+                border-left-color: #00EA90;
+              }
+               #prices li#coin-DNT .sym {
+                border-left-color: #7CF7FA;
+              }
+            #prices li .change {
+              padding: 2px 3px 2px;
+              font-size: 12px;
+              float: right;
+              margin: 10px 0px 0px;
+              background: #000;
+            }
+              #prices li .change.positive {
+                color: #b2ff93;
+              }
+              #prices li .change.negative {
+                color: #ff6765;
+              }
 
           .active {
             display: block;
@@ -92,7 +180,7 @@
             border: none;
             padding: 0px 0px 10px;
             font-size: 14px;
-            background: #000;
+            background: rgba(0, 0, 0, 0);
             color: #fff;
             outline: none;
             border-bottom: 1px solid #252525;
@@ -111,13 +199,31 @@
             margin: 15px 0px 0px 0px;
             padding: 0;
             max-height: 240px;
-            overflow: scroll;
+            overflow-y: scroll;
           }
+          #tips {
+            font-size: 14px;
+          }
+            #tips li {
+
+            }
+
+          .creds {
+            font-size: 8px;
+            color: #252525;
+            margin: 15px 0px 0px 0px;
+          }
+            .creds a {
+              text-decoration: none;
+              color: #252525;
+            }
           
           /*Scrollbar*/
-          ::-webkit-scrollbar,
           ::-webkit-scrollbar-corner {
-            background-color: black;
+            background-color: rgba(0, 0, 0, 0);
+          }
+          ::-webkit-scrollbar {
+            background-color: rgba(0, 0, 0, 100);
           }
           ::-webkit-scrollbar {     
             width: .5em;
@@ -211,6 +317,17 @@
           <option value="ETH">ETH</option>
         </select>
       </label>
+
+      <h3>Tip Jar</h3>
+      <ul id="tips">
+        <li>BTC: 17iENfaJkEpxGXW7mgdFh9hGMZV65R2zVL</li>
+        <li>ETH: 0x68b99868700b33A248de4A62a038a9e3b03DCA21</li>
+        <li>LTC: </li>
+      </ul>
+
+      <div class="creds">
+        <div>Icons made by <a href="https://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">Madebyoliver</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+      </div>
     </div><!-- #settings -->
 
   </body>
@@ -248,7 +365,7 @@
       //alert(settings.get('user.coins'));
       //console.log(actual_JSON.Data);
       
-      //loop through data, get coin info, generate checkbox fore each coin
+      //loop through data, get coin info, generate checkbox for each coin
       Object.keys(actual_JSON.Data).forEach(function(key) {
         //console.log(actual_JSON.Data[key].Name);
         //console.log(actual_JSON.Data[key].CoinName);
@@ -319,7 +436,7 @@
   document.getElementById('saveCoins').onclick = function(){
     var coinForm = document.getElementById('coinlist');
     var selchb = getSelectedChbox(coinForm); // gets the array returned by getSelectedChbox()
-    alert(selchb);
+    //alert(selchb);
 
     settings.set('user', {
       coins: selchb
@@ -327,6 +444,9 @@
 
     var selectedCoins = settings.get('user.coins');
     //document.getElementById('firstname').innerHTML = selectedCoins;
+
+    // just reloading the entire app because I have yet to figure out how to add/remove a coin from the primary list without a page reload
+    location.reload();
   }
 
   const ul = document.getElementById('prices'); // Get the list where we will place coins
@@ -350,15 +470,15 @@
             for (let key of Object.keys(prices)) {
               let coin = prices[key];
               //console.log(coin);
-              let li = createNode('li'),
-                  span = createNode('span');
+              let li    = createNode('li'),
+                  span  = createNode('span');
+                  sym   = createNode('span');
               li.setAttribute("class", "price");
               li.setAttribute("id", "coin-"+[key]);
               //alert("coin-"+[key])
               //console.log(settings.get('coin.'+[key]+'.order'));
               li.setAttribute("sortorder", settings.get(li.id+'.order'));
               //alert(settings.get(li.id+'.order'));
-              span.innerHTML = coin.USD.FROMSYMBOL + ' ' + coin.USD.PRICE + settings.get('coin.'+i+'.order');
               append(li, span);
               append(ul, li);
               i++;
@@ -432,17 +552,36 @@
               let pricesRAW     = data.RAW; // raw to get BTC instead of bitcoin symbol
               for (let key of Object.keys(pricesRAW)) {
                 let coinDISPLAY = pricesDISPLAY[key];
+                  let coinDISPLAYchange = coinDISPLAY[base].CHANGEPCT24HOUR;
                 let coinRAW = pricesRAW[key];
-                console.log(coinDISPLAY);
+                //console.log(coinDISPLAY);
                 let li = document.getElementById("coin-"+[key]),
                     span = document.querySelector("#coin-"+[key]+" span");
+                span.setAttribute("class", "draggable");
+                
+
                 //console.log(span);
-                span.innerHTML = coinRAW[base].FROMSYMBOL + ' ' + coinDISPLAY[base].PRICE.replace(/ /g,''); //.replace(/ /g,'') removes space after $
+                span.innerHTML = '<span class="sym">' + coinRAW[base].FROMSYMBOL + '</span> ' + coinDISPLAY[base].PRICE.replace(/ /g,'') + '<span class="change">' + coinDISPLAYchange + '%</span>'; //.replace(/ /g,'') removes space after $
+
+                // % Change
+                let change = document.querySelector("#coin-"+[key]+" .change");
+                if(coinDISPLAYchange > 0) {
+                  change.className += " positive";
+                  change.classList.remove("negative");
+                }
+                else if(coinDISPLAYchange < 0) {
+                  change.className += " negative";
+                  change.classList.remove("postive");
+                }
+                else {
+                  change.classList.remove("postive");
+                  change.classList.remove("negative");
+                }
               }
             });  
           }  
         )
-      setTimeout(function(){updateData()}, 1000); // run this once every second
+      setTimeout(function(){updateData()}, 500000); // run this once every 5 seconds
   }
 
   // Let's do this thing!

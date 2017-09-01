@@ -31,14 +31,15 @@ function createWindow () {
     width: mainWindowState.width,
     height: mainWindowState.height,
     maxWidth: 360,
-    minWidth: 160,
-    minHeight: 150,
+    minWidth: 240,
+    minHeight: 100,
     maximizable: false,
     fullscreenable: false,
     frame: false,
     titleBarStyle: 'hidden-inset',
     autoHideMenuBar: true,
-    backgroundColor: '#000000',
+    transparent: true,
+    icon: 'images/icon.png'
   });
 
   // Let us register listeners on the window, so we can update the state
