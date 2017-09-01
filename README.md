@@ -1,45 +1,47 @@
-# electron-quick-start
+# Crypto Price Widget
 
-**Clone and run for a quick way to see Electron in action.**
+**Easily track the price of your favorite crypto in an attractive desktop widget**
 
-This is a minimal Electron application based on the [Quick Start Guide](http://electron.atom.io/docs/tutorial/quick-start) within the Electron documentation.
+Built using Electron.
 
-**Use this app along with the [Electron API Demos](http://electron.atom.io/#get-started) app for API code examples to help you get started.**
+## Development
 
-A basic Electron application needs just these files:
 
-- `package.json` - Points to the app's main file and lists its details and dependencies.
-- `main.js` - Starts the app and creates a browser window to render HTML. This is the app's **main process**.
-- `index.html` - A web page to render. This is the app's **renderer process**.
+### Installation
 
-You can learn more about each of these components within the [Quick Start Guide](http://electron.atom.io/docs/tutorial/quick-start).
+To install for development, clone the repository and install the dependencies with `npm install`.
 
-## To Use
+### Running
 
-To clone and run this repository you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
+To start the app, run `npm start`
 
-```bash
-# Clone this repository
-git clone https://github.com/electron/electron-quick-start
-# Go into the repository
-cd electron-quick-start
-# Install dependencies
-npm install
-# Run the app
-npm start
-```
+## About
 
-Note: If you're using Linux Bash for Windows, [see this guide](https://www.howtogeek.com/261575/how-to-run-graphical-linux-desktop-applications-from-windows-10s-bash-shell/) or use `node` from the command prompt.
+Crypto Price Widget is an open source project created by [Nathan Parikh](twitter.com/nathanparikh).
 
-## Resources for Learning Electron
+## Donate
 
-- [electron.atom.io/docs](http://electron.atom.io/docs) - all of Electron's documentation
-- [electron.atom.io/community/#boilerplates](http://electron.atom.io/community/#boilerplates) - sample starter apps created by the community
-- [electron/electron-quick-start](https://github.com/electron/electron-quick-start) - a very basic starter Electron app
-- [electron/simple-samples](https://github.com/electron/simple-samples) - small applications with ideas for taking them further
-- [electron/electron-api-demos](https://github.com/electron/electron-api-demos) - an Electron app that teaches you how to use Electron
-- [hokein/electron-sample-apps](https://github.com/hokein/electron-sample-apps) - small demo apps for the various Electron APIs
+Crypto Price Widget is an open source side project. To support development and keep the project running, you can donate using Bitcoin, Ethereum, Litecoin, or Doge:
+
+- Bitcoin: `17iENfaJkEpxGXW7mgdFh9hGMZV65R2zVL`
+- Ethereum: `0x68b99868700b33A248de4A62a038a9e3b03DCA21`
+- Litecoin: `La8eCVjzLq8zrJV3LgyU6WtnyQnjs76LFY`
+- Doge: `DFHBdwUbcvGezfgHHbWmH8eLWjAjUhFSZ2`
+
+## FAQ
+
+**Does my portfolio leave my computer?**
+
+No, Crypto Price Widget is completely client-side and doesn't hold any keys. We take security very seriously and all our communication happens over HTTPS. All code is open source.
+
+**How will you make money?**
+
+I won't, but donations are welcome :)
+
+**When can I have a Linux, MacOS, etc version?**
+
+Linus and MacOS are coming soon!
 
 ## License
 
-[CC0 1.0 (Public Domain)](LICENSE.md)
+MIT
