@@ -17,7 +17,7 @@ To start the app, run `npm start`
 
 ## About
 
-Crypto Price Widget is an open source project created by [Nathan Parikh](twitter.com/nathanparikh).
+Crypto Price Widget is an open source project created by [Nathan Parikh](https://twitter.com/nathanparikh).
 
 ## Donate
 
