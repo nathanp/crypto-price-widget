@@ -19,8 +19,8 @@ let mainWindow
 function createWindow () {
   // Load the previous state with fallback to defaults
   let mainWindowState = windowStateKeeper({
-    defaultWidth: 360,
-    defaultHeight: 420
+    defaultWidth: 320,
+    defaultHeight: 240
   });
   // Create the browser window.
   mainWindow = new electron.BrowserWindow({
@@ -90,4 +90,3 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-

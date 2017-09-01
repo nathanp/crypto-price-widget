@@ -42,13 +42,21 @@
         height: 16px;
         width: 16px;
         border-radius: 100%;
+        background: none;
+        border: 2px solid #000;
       }
       #close-btn {
-        background: #ff0000;
+        border-color: #ff2626;
       }
+        #close-btn:hover {
+          background: #ff2626;
+        }
       #min-btn {
-        background: #ffa500;
+        border-color: #ffbd45;
       }
+        #min-btn:hover {
+          background: #ffbd45;
+        }
       #settings-btn {
         padding: 0;
 
@@ -202,7 +210,7 @@
             overflow-y: scroll;
           }
           #tips {
-            font-size: 14px;
+            font-size: 12px;
           }
             #tips li {
 
@@ -220,13 +228,14 @@
           
           /*Scrollbar*/
           ::-webkit-scrollbar-corner {
-            background-color: rgba(0, 0, 0, 0);
+            background-color: #000;
           }
           ::-webkit-scrollbar {
             background-color: rgba(0, 0, 0, 100);
           }
           ::-webkit-scrollbar {     
             width: .5em;
+            height: .5em;
           }
 
           ::-webkit-scrollbar-thumb:window-inactive,
@@ -285,8 +294,8 @@
   <body>
     <header style="-webkit-app-region: drag" class="titlebar">
       <div class="controls">
-        <button id="min-btn" onclick="close()">minimize</button>
-        <button id="close-btn" onclick="close()">close</button>
+        <button id="min-btn">-</button>
+        <button id="close-btn">x</button>
       </div>
       <button id="settings-btn" onclick="toggleSettings()"><img src="images/icons8-Settings.png"></button>
     </header>
@@ -305,7 +314,8 @@
           <ul id="coinlist">
           </ul>
       </div><!-- #coinsearch -->
-
+      
+      <!-- this stopped working for some reason
       <h3>Choose Your Base Currency</h3>
       <label class="custom-select">
         <select id="base" onchange="setBase()">
@@ -317,12 +327,13 @@
           <option value="ETH">ETH</option>
         </select>
       </label>
+      -->
 
       <h3>Tip Jar</h3>
       <ul id="tips">
         <li>BTC: 17iENfaJkEpxGXW7mgdFh9hGMZV65R2zVL</li>
         <li>ETH: 0x68b99868700b33A248de4A62a038a9e3b03DCA21</li>
-        <li>LTC: </li>
+        <li>LTC: La8eCVjzLq8zrJV3LgyU6WtnyQnjs76LFY</li>
       </ul>
 
       <div class="creds">
@@ -412,10 +423,19 @@
 
   //user settings
   const settings = require('electron-settings');
-  settings.set('name', {
+  settings.set('developer', {
     first: 'Nathan',
     last: 'Parikh'
   });
+    //default coins
+    if(settings.has('user.coins')) {
+      //do nothing because coins already set
+    }
+    else {
+       settings.set('user', {
+        coins: 'BTC,ETH,LTC'
+      });
+    }
 
   // Returns an array with values of the selected (checked) checkboxes in "frm"
   function getSelectedChbox(frm) {
@@ -581,7 +601,7 @@
             });  
           }  
         )
-      setTimeout(function(){updateData()}, 500000); // run this once every 5 seconds
+      setTimeout(function(){updateData()}, 5000); // run this once every 5 seconds
   }
 
   // Let's do this thing!
