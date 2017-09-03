@@ -4,6 +4,8 @@
 
 Built using Electron.
 
+Currently supports Windows and OSX.
+
 ## Development
 
 
@@ -32,15 +34,15 @@ Crypto Price Widget is an open source side project. To support development and k
 
 **Does my portfolio leave my computer?**
 
-No, Crypto Price Widget is completely client-side and doesn't hold any keys. We take security very seriously and all our communication happens over HTTPS. All code is open source.
+No, Crypto Price Widget is completely client-side and doesn't hold any keys. All code is open source.
 
 **How will you make money?**
 
 I won't, but donations are welcome :)
 
-**When can I have a Linux, MacOS, etc version?**
+**When can I have a Linux version?**
 
-Linus and MacOS are coming soon!
+Linux coming soon!
 
 ## License
 
