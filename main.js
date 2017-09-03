@@ -36,7 +36,7 @@ function createWindow () {
     maximizable: false,
     fullscreenable: false,
     frame: false,
-    titleBarStyle: 'hidden-inset',
+    titleBarStyle: 'customButtonsOnHover',
     autoHideMenuBar: true,
     transparent: true,
     icon: 'images/icon.png'
