@@ -183,6 +183,9 @@
           }
           
           /*Settings Page*/
+          #settings h3:first-child {
+            margin-top: 5px;
+          }
           #myInput {
             font-family: 'Inconsolata', monospace;
             border: none;
@@ -206,9 +209,59 @@
           #coinlist {
             margin: 15px 0px 0px 0px;
             padding: 0;
-            max-height: 240px;
+            max-height: 218px;
             overflow-y: scroll;
           }
+            #coinlist li {
+              position: relative;
+              margin: 0px 0px 5px 0px;
+            }
+            /* Custom checkboxes inspired by https://codepen.io/sderoij/pen/VvJJwE */
+            #coinlist label {
+              height: auto;
+              width: 100%;
+              z-index: 0;
+              display: inline-block;
+              position: absolute;
+              top: 0;
+              left: 0;
+              text-indent: 24px;
+            }
+            #coinlist label div {
+              height: 12px;
+              width: 12px;
+              border: solid 2px rgba(255, 255, 255, 0.6);
+              margin: 0;
+              border-radius: 50%;
+              transform: rotate(45deg);
+              transition: all 0ms ease-in-out, border 0ms ease 0ms;
+              position: absolute;
+              top: 0;
+            }
+              #coinlist input:hover + label div {
+                border-color: rgba(138, 255, 131, 0.9);
+              }
+            #coinlist input {
+              height: auto;
+              width: 18px;
+              margin: 0;
+              opacity: 0;
+              z-index: 1;
+              position: relative;
+              cursor: pointer;
+            }
+            #coinlist input:checked + label > div {
+              border-radius: 0;
+              border-top: 0;
+              border-left: 0;
+              border-color: rgba(138, 255, 131, 0.9);
+              height: 15px;
+              width: 12px;
+              margin-top: -4px;
+              margin-left: 0px;
+              transform: rotate(40deg);
+              transition: all 0ms ease-in-out;
+            }
           #tips {
             font-size: 12px;
           }
@@ -334,6 +387,7 @@
         <li>BTC: 17iENfaJkEpxGXW7mgdFh9hGMZV65R2zVL</li>
         <li>ETH: 0x68b99868700b33A248de4A62a038a9e3b03DCA21</li>
         <li>LTC: La8eCVjzLq8zrJV3LgyU6WtnyQnjs76LFY</li>
+        <li>DOGE: DFHBdwUbcvGezfgHHbWmH8eLWjAjUhFSZ2</li>
       </ul>
 
       <div class="creds">
@@ -385,6 +439,7 @@
           checkBox.className = "coinCode";
         var label = document.createElement("label");
           label.className = "coinName";
+        var div = document.createElement("div");
         checkBox.type = "checkbox";
         checkBox.value = actual_JSON.Data[key].Name;
         checkBox.name = "cl[]";
@@ -399,6 +454,7 @@
         li.appendChild(label);
         label.appendChild(document.createTextNode(actual_JSON.Data[key].CoinName));
         label.appendChild(document.createTextNode(' ('+actual_JSON.Data[key].Name+')'));
+        label.appendChild(div);
       }); //forEach
       
     }); //loadJSON
