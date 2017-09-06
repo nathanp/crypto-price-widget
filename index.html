@@ -11,6 +11,7 @@
         background: rgba(0, 0, 0, 0.95);
         font-family: 'Inconsolata', monospace;
         color: #fff;
+        margin-top: 5px;
       }
       ul {
         margin: 0;
@@ -37,13 +38,14 @@
       
       #close-btn,
       #min-btn {
-        border: none;
-        font-size: 0;
-        height: 16px;
-        width: 16px;
-        border-radius: 100%;
+        height: 12px;
+        width: 12px;
         background: none;
         border: 2px solid #000;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+        padding: 0;
       }
       #close-btn {
         border-color: #ff2626;
@@ -347,8 +349,8 @@
   <body>
     <header style="-webkit-app-region: drag" class="titlebar">
       <div class="controls">
-        <button id="min-btn">-</button>
-        <button id="close-btn">x</button>
+        <button id="min-btn"></button>
+        <button id="close-btn"></button>
       </div>
       <button id="settings-btn" onclick="toggleSettings()"><img src="images/icons8-Settings.png"></button>
     </header>
@@ -372,13 +374,29 @@
       <h3>Choose Your Base Currency</h3>
       <label class="custom-select">
         <select id="base" onchange="setBase()">
+          <option value="BTC">BTC</option>
           <option value="USD">USD</option>
+          <!-- 20 most traded currencies - https://en.wikipedia.org/wiki/Template:Most_traded_currencies -->
+          <option value="AUD">AUD</option> <!-- $ -->
+          <option value="BRL">BRL</option>
+          <option value="CAD">CAD</option> <!-- $ -->
+          <option value="CNY">CNY</option>
           <option value="EUR">EUR</option>
           <option value="GBP">GBP</option>
-          <option value="BTC">BTC</option>
+          <option value="HKD">HKD</option> <!-- $ -->
+          <option value="INR">INR</option>
+          <option value="JPY">JPY</option>
+          <option value="KRW">KRW</option>
+          <option value="MXN">MXN</option> <!-- $ -->
+          <option value="NOK">NOK</option> <!-- $ -->
+          <option value="NZD">NZD</option> <!-- $ -->
+          <option value="RUB">RUB</option>
+          <option value="SEK">SEK</option> <!-- $ -->
+          <option value="SGD">SGD</option> <!-- $ -->
+          <option value="TRY">TRY</option> <!-- $ -->
+          <option value="ZAR">ZAR</option> <!-- $ -->
         </select>
       </label>
-      
 
       <h3>Tip Jar</h3>
       <ul id="tips">
@@ -633,9 +651,23 @@
                     span = document.querySelector("#coin-"+[key]+" span");
                 span.setAttribute("class", "draggable");
                 
+                let coinSymbol  = coinRAW[base].FROMSYMBOL;
+                let coinRate    = coinDISPLAY[base].PRICE.replace(/ /g,''); //.replace(/ /g,'') removes space after $
+                
+                //replace currencies that have no symbols with easier to read formats
+                if(coinRate.includes("AUD")) { coinRate = coinRate.replace("AUD", "A$"); }
+                if(coinRate.includes("CAD")) { coinRate = coinRate.replace("CAD",  "C$"); }
+                if(coinRate.includes("HKD")) { coinRate = coinRate.replace("HKD", "HK$"); }
+                if(coinRate.includes("MXN")) { coinRate = coinRate.replace("MXN", "$"); }
+                if(coinRate.includes("NOK")) { coinRate = coinRate.replace("NOK", "kr"); }
+                if(coinRate.includes("NZD")) { coinRate = coinRate.replace("NZD", "NZ$"); }
+                if(coinRate.includes("SEK")) { coinRate = coinRate.replace("SEK", "kr"); }
+                if(coinRate.includes("SGD")) { coinRate = coinRate.replace("SGD", "S$"); }
+                if(coinRate.includes("TRY")) { coinRate = coinRate.replace("TRY", "₺"); }
+                if(coinRate.includes("ZAR")) { coinRate = coinRate.replace("ZAR", "R"); }
 
                 //console.log(span);
-                span.innerHTML = '<span class="sym">' + coinRAW[base].FROMSYMBOL + '</span> ' + coinDISPLAY[base].PRICE.replace(/ /g,'') + '<span class="change">' + coinDISPLAYchange + '%</span>'; //.replace(/ /g,'') removes space after $
+                span.innerHTML = '<span class="sym">' + coinSymbol + '</span> ' + coinRate + '<span class="change">' + coinDISPLAYchange + '%</span>'; 
 
                 // % Change
                 let change = document.querySelector("#coin-"+[key]+" .change");
