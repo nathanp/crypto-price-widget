@@ -377,24 +377,24 @@
           <option value="BTC">BTC</option>
           <option value="USD">USD</option>
           <!-- 20 most traded currencies - https://en.wikipedia.org/wiki/Template:Most_traded_currencies -->
-          <option value="AUD">AUD</option> <!-- $ -->
+          <option value="AUD">AUD</option>
           <option value="BRL">BRL</option>
-          <option value="CAD">CAD</option> <!-- $ -->
+          <option value="CAD">CAD</option>
           <option value="CNY">CNY</option>
           <option value="EUR">EUR</option>
           <option value="GBP">GBP</option>
-          <option value="HKD">HKD</option> <!-- $ -->
+          <option value="HKD">HKD</option>
           <option value="INR">INR</option>
           <option value="JPY">JPY</option>
           <option value="KRW">KRW</option>
-          <option value="MXN">MXN</option> <!-- $ -->
-          <option value="NOK">NOK</option> <!-- $ -->
-          <option value="NZD">NZD</option> <!-- $ -->
+          <option value="MXN">MXN</option>
+          <option value="NOK">NOK</option>
+          <option value="NZD">NZD</option>
           <option value="RUB">RUB</option>
-          <option value="SEK">SEK</option> <!-- $ -->
-          <option value="SGD">SGD</option> <!-- $ -->
-          <option value="TRY">TRY</option> <!-- $ -->
-          <option value="ZAR">ZAR</option> <!-- $ -->
+          <option value="SEK">SEK</option>
+          <option value="SGD">SGD</option>
+          <option value="TRY">TRY</option>
+          <option value="ZAR">ZAR</option>
         </select>
       </label>
 
@@ -422,6 +422,29 @@
   /******************
   * APP FUNCTIONALITY
   ******************/
+  //user settings
+  const settings = require('electron-settings');
+  settings.set('developer', {
+    first: 'Nathan',
+    last: 'Parikh'
+  });
+    //default coins
+    if(settings.has('user.coins')) {
+      //do nothing because coins already set
+    }
+    else {
+       settings.set('user', {
+        coins: 'BTC,ETH,LTC'
+      });
+    }
+    //default base currency
+    if(settings.has('user.currency')) {
+      //do nothing because currency already set
+    }
+    else {
+       settings.set('user.currency', 'USD');
+    }
+
   (function() {
 
     function loadJSON(callback) {   
@@ -475,12 +498,17 @@
       
     }); //loadJSON
    
-    base = 'USD';
+    base = settings.get('user.currency'); // get the user's base currency
+    var currSel = document.getElementById('base'); //select the currency select box
+    currSel.value = settings.get('user.currency'); //select the option that corresponds to the user's currency
     setBase = function() {
       //selected base currency
-      var x = document.getElementById("base").selectedIndex;
-      var y = document.getElementById("base").options;
-      base = y[x].text;
+      var sel = document.getElementById('base');
+      var x   = sel.selectedIndex;
+      var y   = sel.options;
+      base    = y[x].text;
+      settings.set('user.currency', base); //save the user's selection
+      updateData(); //immediately reflect the changed currency
     };
     
   })();
@@ -493,21 +521,7 @@
     return parent.appendChild(el);
   }
 
-  //user settings
-  const settings = require('electron-settings');
-  settings.set('developer', {
-    first: 'Nathan',
-    last: 'Parikh'
-  });
-    //default coins
-    if(settings.has('user.coins')) {
-      //do nothing because coins already set
-    }
-    else {
-       settings.set('user', {
-        coins: 'BTC,ETH,LTC'
-      });
-    }
+  
 
   // Returns an array with values of the selected (checked) checkboxes in "frm"
   function getSelectedChbox(frm) {
