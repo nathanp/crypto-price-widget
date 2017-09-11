@@ -1,0 +1,336 @@
+body {
+  background: rgba(0, 0, 0, 0.95);
+  font-family: 'Inconsolata', monospace;
+  color: #fff;
+  margin-top: 5px;
+}
+ul {
+  margin: 0;
+  padding: 0;
+}
+.titlebar {
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+  opacity: 0;
+}
+  .titlebar:hover {
+    opacity: 1;
+  }
+  .titlebar .controls {
+    float: right;
+    line-height: 0;
+  }
+button {
+  -webkit-app-region: no-drag;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+#close-btn,
+#min-btn {
+  height: 12px;
+  width: 12px;
+  background: none;
+  border: 2px solid #000;
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  padding: 0;
+}
+#close-btn {
+  border-color: #ff2626;
+}
+  #close-btn:hover {
+    background: #ff2626;
+  }
+#min-btn {
+  border-color: #ffbd45;
+}
+  #min-btn:hover {
+    background: #ffbd45;
+  }
+#settings-btn {
+  padding: 0;
+
+}
+#settings-btn img {
+  width: 24px;
+  opacity: 0.5;
+}
+  #settings-btn:hover img {
+    opacity: 1;
+  }
+
+ul {
+  list-style-type: none;
+}
+  #prices {
+    margin: 0;
+    padding: 0;
+    font-size: 28px;
+    font-weight: 400;
+  }
+    #prices li {
+      margin: 0px 0px 15px 0px;
+      padding: 0px 0px 15px 0px;
+      border-bottom: 1px solid #252525;
+    }
+      #prices li:last-child {
+        border-bottom: none;
+      }
+      #prices li span {
+        
+      }
+      #prices li span.draggable {
+        width: 100%;
+      }
+      #prices li .sym {
+        border: 1px solid #252525;
+        border-left-width: 2px;
+        padding: 0px 5px 0px;
+        font-family: 'Heebo', sans-serif;
+        font-size: 12px;
+      }
+        #prices li .sym:hover {
+          cursor: -webkit-grab;
+        }
+        /*Symbol Colors*/
+        #prices li#coin-BTC .sym {
+          border-left-color: #F9A847;
+        }
+        #prices li#coin-XRP .sym {
+          border-left-color: #0997D2;
+        }
+        #prices li#coin-LTC .sym {
+          border-left-color: #F1F1F1;
+        }
+        #prices li#coin-NEO .sym,
+        #prices li#coin-GAS .sym {
+          border-left-color: #9CD115;
+        }
+        #prices li#coin-OMG .sym {
+          border-left-color: #1A53F0;
+        }
+        #prices li#coin-BCH .sym {
+          border-left-color: #F7931A;
+        }
+        #prices li#coin-DASH .sym {
+          border-left-color: #0475B6;
+        }
+        #prices li#coin-XMR .sym {
+          border-left-color: #FF6600;
+        }
+        #prices li#coin-ETC .sym {
+          border-left-color: #689274;
+        }
+         #prices li#coin-ZEC .sym {
+          border-left-color: #EFB948;
+        }
+         #prices li#coin-GNT .sym {
+          border-left-color: #00AFBF;
+        }
+         #prices li#coin-BAT .sym {
+          border-left-color: #662F92;
+        }
+         #prices li#coin-FCT .sym {
+          border-left-color: #E3A77D;
+        }
+         #prices li#coin-ARK .sym {
+          border-left-color: #CB0101;
+        }
+         #prices li#coin-DOGE .sym {
+          border-left-color: #BBA034;
+        }
+         #prices li#coin-CVC .sym {
+          border-left-color: #41BB2E;
+        }
+         #prices li#coin-MCO .sym {
+          border-left-color: #82344C;
+        }
+         #prices li#coin-UBQ .sym {
+          border-left-color: #00EA90;
+        }
+         #prices li#coin-DNT .sym {
+          border-left-color: #7CF7FA;
+        }
+      #prices li .change {
+        padding: 2px 3px 2px;
+        font-size: 12px;
+        float: right;
+        margin: 10px 0px 0px;
+        background: #000;
+      }
+        #prices li .change.positive {
+          color: #b2ff93;
+        }
+        #prices li .change.negative {
+          color: #ff6765;
+        }
+
+    .active {
+      display: block;
+    }
+    .inactive {
+      display: none;
+    }
+    
+    /*Settings Page*/
+    #settings h3:first-child {
+      margin-top: 5px;
+    }
+    #myInput {
+      font-family: 'Inconsolata', monospace;
+      border: none;
+      padding: 0px 0px 10px;
+      font-size: 14px;
+      background: rgba(0, 0, 0, 0);
+      color: #fff;
+      outline: none;
+      border-bottom: 1px solid #252525;
+      display: block;
+      width: 100%;
+    }
+    #saveCoins {
+      background-color: #000000;
+      color: #fff;
+      border: 1px solid #252525;
+      padding: 5px 10px;
+      margin: -1px 0px 0px 0px;
+      font-family: 'Inconsolata', monospace;
+    }
+    #coinlist {
+      margin: 15px 0px 0px 0px;
+      padding: 0;
+      max-height: 218px;
+      overflow-y: scroll;
+    }
+      #coinlist li {
+        position: relative;
+        margin: 0px 0px 5px 0px;
+      }
+      /* Custom checkboxes inspired by https://codepen.io/sderoij/pen/VvJJwE */
+      #coinlist label {
+        height: auto;
+        width: 100%;
+        z-index: 0;
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        text-indent: 24px;
+      }
+      #coinlist label div {
+        height: 12px;
+        width: 12px;
+        border: solid 2px rgba(255, 255, 255, 0.6);
+        margin: 0;
+        border-radius: 50%;
+        transform: rotate(45deg);
+        transition: all 0ms ease-in-out, border 0ms ease 0ms;
+        position: absolute;
+        top: 0;
+      }
+        #coinlist input:hover + label div {
+          border-color: rgba(138, 255, 131, 0.9);
+        }
+      #coinlist input {
+        height: auto;
+        width: 18px;
+        margin: 0;
+        opacity: 0;
+        z-index: 1;
+        position: relative;
+        cursor: pointer;
+      }
+      #coinlist input:checked + label > div {
+        border-radius: 0;
+        border-top: 0;
+        border-left: 0;
+        border-color: rgba(138, 255, 131, 0.9);
+        height: 15px;
+        width: 12px;
+        margin-top: -4px;
+        margin-left: 0px;
+        transform: rotate(40deg);
+        transition: all 0ms ease-in-out;
+      }
+    #tips {
+      font-size: 12px;
+    }
+      #tips li {
+
+      }
+
+    .creds {
+      font-size: 8px;
+      color: #252525;
+      margin: 15px 0px 0px 0px;
+    }
+      .creds a {
+        text-decoration: none;
+        color: #252525;
+      }
+    
+    /*Scrollbar*/
+    ::-webkit-scrollbar-corner {
+      background-color: #000;
+    }
+    ::-webkit-scrollbar {
+      background-color: rgba(0, 0, 0, 100);
+    }
+    ::-webkit-scrollbar {     
+      width: .5em;
+      height: .5em;
+    }
+
+    ::-webkit-scrollbar-thumb:window-inactive,
+    ::-webkit-scrollbar-thumb {
+      background:  #252525;
+      -webkit-border-radius: 100px;
+    }
+
+    /*Select Boxes*/
+    .custom-select {
+      position: relative;
+      display: inline-block;
+    }
+    .custom-select select {
+      display: inline-block;
+      border: 1px solid #252525;
+      padding: 4px 3px 3px 5px;
+      margin: 0;
+      font: inherit;
+      outline: none;
+      line-height: 1.2;
+      background: #000000;
+      -webkit-appearance: none;
+      width: 145px;
+      color: #fff;
+    }
+    /* for Webkit's CSS-only solution */
+    @media screen and (-webkit-min-device-pixel-ratio:0) { 
+      .custom-select select {
+          padding-right:30px;    
+      }
+    }
+    /* Since we removed the default focus styles, we have to add our own */
+    .custom-select select:focus {
+      -webkit-box-shadow: 0 0 3px 1px #00afc1;
+      -moz-box-shadow: 0 0 3px 1px #00afc1;
+      box-shadow: 0 0 3px 1px #00afc1;
+    }
+    /* Select arrow styling */
+    .custom-select:after {
+      content: "▼";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      font-size: 60%;
+      line-height: 30px;
+      padding: 0 7px;
+      background: #252525;
+      color: white;
+      pointer-events: none;
+    }
