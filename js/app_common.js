@@ -203,6 +203,52 @@ function updateData() {
             let pricesDISPLAY = data.DISPLAY; // display for everything except coin symbol
             let pricesRAW     = data.RAW; // raw to get BTC instead of bitcoin symbol
             let portfolioSum  = 0;
+            // Chart labels
+            var chartLabels = [];
+            // Chart data
+            var chartData = [];
+            // Chart colors
+            var chartColors = [
+                '#F57C00',
+                '#AFB42B',
+                '#7B1FA2',
+                '#512DA8',
+                '#455A64',
+                '#1976D2',
+                '#0288D1',
+                '#0288D1',
+                '#D32F2F',
+                '#0097A7',
+                '#00796B',
+                '#388E3C',
+                '#689F38',
+                '#303F9F',
+                '#FBC02D',
+                '#FFA000',
+                '#E64A19',
+                '#C2185B',
+                '#fff'
+            ];
+            //randomize
+            function shuffle(array) {
+              var currentIndex = array.length, temporaryValue, randomIndex;
+
+              // While there remain elements to shuffle...
+              while (0 !== currentIndex) {
+
+                // Pick a remaining element...
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+
+                // And swap it with the current element.
+                temporaryValue = array[currentIndex];
+                array[currentIndex] = array[randomIndex];
+                array[randomIndex] = temporaryValue;
+              }
+
+              return array;
+            }
+
             for (let key of Object.keys(pricesRAW)) {
               let coinDISPLAY = pricesDISPLAY[key];
                 let coinDISPLAYchange = coinDISPLAY[base].CHANGEPCT24HOUR;
@@ -267,9 +313,36 @@ function updateData() {
                 quantityValue.innerHTML = quantityTotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
                 portfolioTotalValue.innerHTML = portfolioSum.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
               }
-              
+
+              // Chart labels
+              chartLabels.push(key);
+              // Chart data
+              chartData.push(quantityTotal);
               
             } //for
+            var newChartLabels = chartLabels;
+           
+            // Chart
+            var ctx = document.getElementById("myChart");
+            var myChart = new Chart(ctx, {
+              type: 'doughnut',
+              data: {
+                  datasets: [{
+                      data: chartData,
+                      backgroundColor: chartColors,
+                      borderColor: '#000',
+                      borderWidth: 2
+                  }],
+
+                  labels: newChartLabels
+              },
+              options: {
+                  animation : false,
+                  legend : {
+                    position: 'bottom'
+                  }
+              }
+            });
 
           }); //then
         }  
