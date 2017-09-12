@@ -115,6 +115,7 @@ function getSelectedChbox(frm) {
 }
 
 const ul = document.getElementById('prices'); // Get the list where we will place coins
+const portfolio_ul = document.getElementById('portfolio-list');; 
 const url = 'https://min-api.cryptocompare.com/data/pricemultifull?fsyms='+settings.get('user.coins') +'&tsyms='+base +'&extraParams=crypto-price-widget';
 
 function initData() {
@@ -201,6 +202,7 @@ function updateData() {
           response.json().then(function(data) { 
             let pricesDISPLAY = data.DISPLAY; // display for everything except coin symbol
             let pricesRAW     = data.RAW; // raw to get BTC instead of bitcoin symbol
+            let portfolioSum  = 0;
             for (let key of Object.keys(pricesRAW)) {
               let coinDISPLAY = pricesDISPLAY[key];
                 let coinDISPLAYchange = coinDISPLAY[base].CHANGEPCT24HOUR;
@@ -242,8 +244,34 @@ function updateData() {
                 change.classList.remove("postive");
                 change.classList.remove("negative");
               }
-            }
-          });  
+
+              // Portfolio
+              let quantityValue   = document.querySelector("#coin-"+[key]+" .quantity-value");
+              let quantityNumber  = settings.get('quantity.'+[key]);
+              let regp = /[^0-9.-]+/g;
+              let quantityTotal   = parseFloat(coinRate.replace(regp, '')) * parseFloat(quantityNumber.replace(regp, ''));
+
+              // sum of all total coin values
+              portfolioSum += quantityTotal;
+              // put sum into the markup
+              let portfolioTotalValue = document.querySelector("#portfolio-total-value .value");
+
+              // total value for each coin
+              if(coinRate.includes("Ƀ")) {
+                //because BTC has 8 decimal places
+                quantityValue.innerHTML = quantityTotal.toFixed(8);
+                portfolioTotalValue.innerHTML = portfolioSum.toFixed(8);
+              }
+              else {
+                //standard currency format
+                quantityValue.innerHTML = quantityTotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+                portfolioTotalValue.innerHTML = portfolioSum.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+              }
+              
+              
+            } //for
+
+          }); //then
         }  
       )
     setTimeout(function(){updateData()}, 5000); // run this once every 5 seconds
@@ -267,6 +295,53 @@ document.getElementById('saveCoins').onclick = function(){
   //alert(settings.get('user.currency'));
 }
 
+/***********
+* PORTFOLIO
+***********/
+var portfolio_list_container = document.querySelector('#portfolio-list');
+var portfolio_list = settings.get('user.coins');
+
+//generate html from list of coins
+for (let key of Object.keys(portfolio_list)) {
+  let coin = portfolio_list[key];
+  //console.log(coin);
+  let li    = createNode('li'),
+      span  = createNode('span');
+      sym   = createNode('span');
+  li.setAttribute("id", "coin-"+[coin]);
+
+  append(li, span);
+  append(portfolio_ul, li);
+
+  if (settings.has('quantity.'+[coin])) {
+    inputValue = settings.get('quantity.'+[coin]);
+  }
+  else {
+    inputValue = '0';
+  }
+
+  span.innerHTML = '<span class="sym">' + coin + '</span> <span class="block quantity"><label for="quantity.' + coin +'">Quantity</label> <input type="number" name="quantity.' + coin +'" min="0" value="'+inputValue+'" step=".01"></span> <span class="block value"><label>Current Value</label><span class="quantity-value"></span></span>';
+
+  i++;
+} //for
+
+// save quantities
+document.getElementById('saveQuantities').onclick = function(){
+  var items = portfolio_ul.getElementsByTagName("input");
+  for (var i = 0; i < items.length; ++i) {
+    // do something with items[i], which is a <li> element
+    inputName   = items[i].getAttribute("name");
+    inputValue  = items[i].value;
+    //console.log(inputValue);
+    settings.set(inputName, inputValue);
+  }
+  
+
+  // just reloading the entire app because I have yet to figure out how to add/remove a coin from the primary list without a page reload
+  //location.reload(false);
+}
+
+
 /*******
 * APP UI
 ********/
@@ -282,20 +357,23 @@ document.getElementById("min-btn").addEventListener("click", function (e) {
   window.minimize(); 
 });
 
-//settings tab/icon
-function toggleSettings() {
-  var divs = document.getElementsByClassName('panel'), i;
-  for (i = 0; i < divs.length; ++i) {
-    if(divs[i].classList.contains('inactive')) {
-      divs[i].classList.remove('inactive');
-      divs[i].classList.add('active');
+//Panel tabs
+var tabLinks = document.querySelectorAll('.tabs button');
+for (var i = 0; i < tabLinks.length; i++) { 
+  tabLinks[i].onclick = function() {
+    var target = this.getAttribute('href').replace('#', '');
+    var sections = document.querySelectorAll('.panel');
+    for(var j=0; j < sections.length; j++) {
+      sections[j].style.display = 'none';
+    }    
+    document.getElementById(target).style.display = 'block';
+    for(var k=0; k < tabLinks.length; k++) {
+      tabLinks[k].removeAttribute('class');
     }
-    else {
-      divs[i].classList.remove('active');
-      divs[i].classList.add('inactive');
-    }
-  }//for
-}//toggleSettings
+    this.setAttribute('class', 'active');
+    return false;
+  }
+};
 
 //Coin search filter
 function myFunction() {

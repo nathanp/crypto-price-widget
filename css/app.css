@@ -62,109 +62,146 @@ button {
     opacity: 1;
   }
 
+#portfolio-btn, #main-btn {
+  color: #fff;
+}
+
+.panel {
+  display: none;
+}
+
 ul {
   list-style-type: none;
 }
-  #prices {
+  .coin-list {
     margin: 0;
     padding: 0;
     font-size: 28px;
     font-weight: 400;
   }
-    #prices li {
+    #portfolio-list.coin-list {
+      font-size: 16px;
+    }
+    .coin-list li {
       margin: 0px 0px 15px 0px;
       padding: 0px 0px 15px 0px;
       border-bottom: 1px solid #252525;
     }
-      #prices li:last-child {
+      #portfolio-list.coin-list li {
+        margin-bottom: 10px;
+        padding-bottom: 0px;
+      }
+      .coin-list li:last-child {
         border-bottom: none;
       }
-      #prices li span {
+      .coin-list li span {
         
       }
-      #prices li span.draggable {
+      .coin-list li span.draggable {
         width: 100%;
       }
-      #prices li .sym {
+      .coin-list input[type="number"] {
+        border: none;
+        padding: 5px;
+        background: rgba(0, 0, 0, 0);
+        color: #fff;
+        max-width: 85px;
+        display: inline-block;
+        outline: none;
+      }
+      .coin-list .block {
+        display: inline-block;
+        vertical-align: top;
+      }
+        .coin-list .block label {
+          font-size: 12px;
+          display: block;
+          background: rgba(255, 255, 255, 0.1);
+          padding: 1px 2px 2px;
+        }
+        .coin-list .block .quantity-value {
+          color: #b2ff93;
+        }
+      .coin-list li .sym {
         border: 1px solid #252525;
         border-left-width: 2px;
         padding: 0px 5px 0px;
         font-family: 'Heebo', sans-serif;
         font-size: 12px;
       }
-        #prices li .sym:hover {
+        .coin-list li .sym:hover {
           cursor: -webkit-grab;
         }
         /*Symbol Colors*/
-        #prices li#coin-BTC .sym {
+        .coin-list li#coin-BTC .sym {
           border-left-color: #F9A847;
         }
-        #prices li#coin-XRP .sym {
+        .coin-list li#coin-XRP .sym {
           border-left-color: #0997D2;
         }
-        #prices li#coin-LTC .sym {
+        .coin-list li#coin-LTC .sym {
           border-left-color: #F1F1F1;
         }
-        #prices li#coin-NEO .sym,
-        #prices li#coin-GAS .sym {
+        .coin-list li#coin-NEO .sym,
+        .coin-list li#coin-GAS .sym {
           border-left-color: #9CD115;
         }
-        #prices li#coin-OMG .sym {
+        .coin-list li#coin-OMG .sym {
           border-left-color: #1A53F0;
         }
-        #prices li#coin-BCH .sym {
+        .coin-list li#coin-BCH .sym {
           border-left-color: #F7931A;
         }
-        #prices li#coin-DASH .sym {
+        .coin-list li#coin-DASH .sym {
           border-left-color: #0475B6;
         }
-        #prices li#coin-XMR .sym {
+        .coin-list li#coin-XMR .sym {
           border-left-color: #FF6600;
         }
-        #prices li#coin-ETC .sym {
+        .coin-list li#coin-ETC .sym {
           border-left-color: #689274;
         }
-         #prices li#coin-ZEC .sym {
+         .coin-list li#coin-ZEC .sym {
           border-left-color: #EFB948;
         }
-         #prices li#coin-GNT .sym {
+         .coin-list li#coin-GNT .sym {
           border-left-color: #00AFBF;
         }
-         #prices li#coin-BAT .sym {
+         .coin-list li#coin-BAT .sym {
           border-left-color: #662F92;
         }
-         #prices li#coin-FCT .sym {
+         .coin-list li#coin-FCT .sym {
           border-left-color: #E3A77D;
         }
-         #prices li#coin-ARK .sym {
+         .coin-list li#coin-ARK .sym {
           border-left-color: #CB0101;
         }
-         #prices li#coin-DOGE .sym {
+         .coin-list li#coin-DOGE .sym {
           border-left-color: #BBA034;
         }
-         #prices li#coin-CVC .sym {
+         .coin-list li#coin-CVC .sym {
           border-left-color: #41BB2E;
         }
-         #prices li#coin-MCO .sym {
+         .coin-list li#coin-MCO .sym {
           border-left-color: #82344C;
         }
-         #prices li#coin-UBQ .sym {
+         .coin-list li#coin-UBQ .sym {
           border-left-color: #00EA90;
         }
-         #prices li#coin-DNT .sym {
+         .coin-list li#coin-DNT .sym {
           border-left-color: #7CF7FA;
         }
-      #prices li .change {
+      .coin-list li .change {
         padding: 2px 3px 2px;
         font-size: 12px;
         float: right;
         margin: 10px 0px 0px;
         background: #000;
       }
-        #prices li .change.positive {
+        .coin-list li .change.positive {
           color: #b2ff93;
         }
-        #prices li .change.negative {
+        .coin-list li .change.negative {
           color: #ff6765;
         }
 
@@ -191,7 +228,8 @@ ul {
       display: block;
       width: 100%;
     }
-    #saveCoins {
+    #saveCoins,
+    #saveQuantities {
       background-color: #000000;
       color: #fff;
       border: 1px solid #252525;

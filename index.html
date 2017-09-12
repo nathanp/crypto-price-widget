@@ -13,17 +13,20 @@
       <div class="controls">
         <button id="min-btn"></button>
         <button id="close-btn"></button>
-      </div>
-      <button id="settings-btn" onclick="toggleSettings()"><img src="images/icons8-Settings.png"></button>
-      <button id="settings-btn" onclick="toggleSettings()">folio</button>
+      </div><!-- .controls -->
+      <div class="tabs">
+        <button id="main-btn" href="#main">main</button>
+        <button id="settings-btn" href="#settings"><img src="images/icons8-Settings.png"></button>
+        <button id="portfolio-btn" href="#portfolio">folio</button>
+      </div><!-- .tabs -->
     </header>
 
     <div id="main" class="panel active">
-      <ul id="prices">
+      <ul id="prices" class="coin-list">
       </ul>
     </div><!-- #main -->
     
-    <div id="settings" class="panel inactive">
+    <div id="settings" class="panel">
       <h3>Choose Your Coins</h3>
 
       <div id="coinsearch">
@@ -73,8 +76,19 @@
       </div>
     </div><!-- #settings -->
 
-    <!--<div id="portfolio" class="panel active">-->
-      <!-- manual selection of coins - separate from what's tracking -->
+    <div id="portfolio" class="panel">
+      <div class="chart">
+        
+      </div>
+
+      <ul id="portfolio-list" class="coin-list">
+        
+      </ul>
+
+      <button type="button" id="saveQuantities">Save</button>
+
+      <div id="portfolio-total-value">Total Value: <span class="value"></span></div>
+
       <!-- manual entry of quantity -->
       <!-- grab coin prices same as above -->
       <!-- show current portfolio value -->
@@ -82,7 +96,7 @@
 
       <!-- Enter avg. purchase price for each coin -->
       <!-- See % gain/loss -->
-    <!--</div>-->
+    </div><!-- #portfolio -->
 
   </body>
 
