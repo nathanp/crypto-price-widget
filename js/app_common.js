@@ -148,11 +148,15 @@ function initData() {
             append(li, span);
             append(ul, li);
             i++;
-          }
+          } //for
           //console.log(data.RAW.BTC.USD.PRICE)
 
           sortChildren(
               document.getElementById('prices'),
+              function(li) { return +li.getAttribute('sortorder') }
+          );
+          sortChildren(
+              document.getElementById('portfolio-list'),
               function(li) { return +li.getAttribute('sortorder') }
           );
 
@@ -161,10 +165,10 @@ function initData() {
             handle: 'span'
           })[0].addEventListener('sortstop', function(e) {
             // Declare variables
-            var ul, li, i;
+            var ul, ulPortfolio, li, liPortfolio, i;
             ul = document.getElementById("prices");
+            ulPortfolio = document.getElementById("portfolio-list");
             li = ul.getElementsByTagName('li');
-
             // Loop through all list items
             for (i = 0; i < li.length; i++) {
                li[i].setAttribute("sortorder", i);
@@ -174,7 +178,7 @@ function initData() {
                 order: li[i].getAttribute('sortorder')
               });
               //alert(settings.get(elementID + '.order'));
-            }
+            } //for
             //alert(settings.get('coin.'+e+'.order'));
           }); //sortable
 
@@ -203,29 +207,31 @@ function updateData() {
             let pricesDISPLAY = data.DISPLAY; // display for everything except coin symbol
             let pricesRAW     = data.RAW; // raw to get BTC instead of bitcoin symbol
             let portfolioSum  = 0;
+
             // Chart labels
             var chartLabels = [];
             // Chart data
             var chartData = [];
-            // Chart colors
+            // Chart colors - need to match these colors to the coin in a future release
             var chartColors = [
-                '#F57C00',
-                '#AFB42B',
-                '#7B1FA2',
-                '#512DA8',
-                '#455A64',
-                '#1976D2',
+                '#FF9F1C',
+                '#2EC4B6',
+                '#E71D36',
+                '#011627',
+                '#FDFFFC',
+                '#D31EE8',
                 '#0288D1',
-                '#0288D1',
-                '#D32F2F',
+                '#5FC42D',
+                '#E64A19',
                 '#0097A7',
+                '#FBC02D',
                 '#00796B',
                 '#388E3C',
                 '#689F38',
                 '#303F9F',
-                '#FBC02D',
+                '#C2185B',
                 '#FFA000',
-                '#E64A19',
+                '#D32F2F',
                 '#C2185B',
                 '#fff'
             ];
@@ -320,10 +326,16 @@ function updateData() {
               chartData.push(quantityTotal);
               
             } //for
+
+            sortChildren(
+              document.getElementById('portfolio-list'),
+              function(li) { return +li.getAttribute('sortorder') }
+          );
+
             var newChartLabels = chartLabels;
            
             // Chart
-            var ctx = document.getElementById("myChart");
+            var ctx = document.getElementById("portfolioChart");
             var myChart = new Chart(ctx, {
               type: 'doughnut',
               data: {
@@ -331,7 +343,7 @@ function updateData() {
                       data: chartData,
                       backgroundColor: chartColors,
                       borderColor: '#000',
-                      borderWidth: 2
+                      borderWidth: 0
                   }],
 
                   labels: newChartLabels
@@ -342,7 +354,7 @@ function updateData() {
                     position: 'bottom'
                   }
               }
-            });
+            }); //myChart
 
           }); //then
         }  
@@ -382,6 +394,7 @@ for (let key of Object.keys(portfolio_list)) {
       span  = createNode('span');
       sym   = createNode('span');
   li.setAttribute("id", "coin-"+[coin]);
+  li.setAttribute("sortorder", settings.get(li.id+'.order'));
 
   append(li, span);
   append(portfolio_ul, li);

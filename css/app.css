@@ -50,15 +50,20 @@ button {
   #min-btn:hover {
     background: #ffbd45;
   }
-#settings-btn {
-  padding: 0;
 
+.tabs button {
+  padding: 0;
 }
-#settings-btn img {
-  width: 24px;
+.tabs button,
+.tabs button.active {
+  display: inline-block;
+}
+.tabs button img {
+  width: 19px;
   opacity: 0.5;
 }
-  #settings-btn:hover img {
+  .tabs button:hover img,
+  .tabs button.active img {
     opacity: 1;
   }
 
@@ -81,6 +86,7 @@ ul {
   }
     #portfolio-list.coin-list {
       font-size: 16px;
+      padding-top: 9px;
     }
     .coin-list li {
       margin: 0px 0px 15px 0px;
@@ -309,6 +315,17 @@ ul {
         text-decoration: none;
         color: #252525;
       }
+
+    /*Portfolio*/
+    #portfolio-total-value {
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: 600;
+      margin: 15px 0px;
+    }
+    #portfolioChart {
+      max-height: 480px;
+    }
     
     /*Scrollbar*/
     ::-webkit-scrollbar-corner {
