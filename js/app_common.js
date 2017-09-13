@@ -169,9 +169,11 @@ function initData() {
             ul = document.getElementById("prices");
             ulPortfolio = document.getElementById("portfolio-list");
             li = ul.getElementsByTagName('li');
+            liPortfolio = ulPortfolio.getElementsByTagName('li');
             // Loop through all list items
             for (i = 0; i < li.length; i++) {
                li[i].setAttribute("sortorder", i);
+               
                var elementID = li[i].id;
                //alert(elementID);
                settings.set(elementID, { // coin-BTC
@@ -350,6 +352,8 @@ function updateData() {
               },
               options: {
                   animation : false,
+                  responsive: false,
+                  maintainAspectRatio: true,
                   legend : {
                     position: 'bottom'
                   }
@@ -404,6 +408,7 @@ for (let key of Object.keys(portfolio_list)) {
   }
   else {
     inputValue = '0';
+    inputValue = settings.set('quantity.'+[coin], '0');
   }
 
   span.innerHTML = '<span class="sym">' + coin + '</span> <span class="block quantity"><label for="quantity.' + coin +'">Quantity</label> <input type="number" name="quantity.' + coin +'" min="0" value="'+inputValue+'" step=".01"></span> <span class="block value"><label>Current Value</label><span class="quantity-value"></span></span>';

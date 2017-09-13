@@ -325,6 +325,7 @@ ul {
     }
     #portfolioChart {
       max-height: 480px;
+      max-width: 100%;
     }
     
     /*Scrollbar*/

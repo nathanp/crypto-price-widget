@@ -1,7 +1,7 @@
 {
   "name": "crypto-price-widget",
   "productName": "Crypto Price Widget",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A cross-platform app for tracking Crypto prices",
   "main": "main.js",
   "scripts": {
