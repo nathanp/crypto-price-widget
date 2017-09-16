@@ -122,7 +122,8 @@ ul {
         .coin-list .block label {
           font-size: 12px;
           display: block;
-          background: rgba(255, 255, 255, 0.1);
+          /*background: rgba(255, 255, 255, 0.1);*/
+          
           padding: 1px 2px 2px;
         }
         .coin-list .block .quantity-value {

@@ -36,10 +36,6 @@ Crypto Price Widget is an open source side project. To support development and k
 
 No, Crypto Price Widget is completely client-side and doesn't hold any keys. All code is open source.
 
-**How will you make money?**
-
-I won't, but donations are welcome :)
-
 **When can I have a Linux version?**
 
 Linux coming soon!
