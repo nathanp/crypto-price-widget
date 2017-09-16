@@ -254,7 +254,14 @@ ul {
         margin: 0px 0px 5px 0px;
       }
       /* Custom checkboxes inspired by https://codepen.io/sderoij/pen/VvJJwE */
-      #coinlist label {
+      .checkbox-wrapper {
+        position: relative;
+        display: block;
+        margin: 15px 0px 0px;
+      }
+
+      #coinlist label,
+      .checkbox-styled-label {
         height: auto;
         width: 100%;
         z-index: 0;
@@ -264,7 +271,8 @@ ul {
         left: 0;
         text-indent: 24px;
       }
-      #coinlist label div {
+      #coinlist label div,
+      .checkbox-styled-label div {
         height: 12px;
         width: 12px;
         border: solid 2px rgba(255, 255, 255, 0.6);
@@ -275,10 +283,12 @@ ul {
         position: absolute;
         top: 0;
       }
-        #coinlist input:hover + label div {
+        #coinlist input:hover + label div,
+        .checkbox-styled:hover + label div {
           border-color: rgba(138, 255, 131, 0.9);
         }
-      #coinlist input {
+      #coinlist input,
+      .checkbox-styled {
         height: auto;
         width: 18px;
         margin: 0;
@@ -287,7 +297,8 @@ ul {
         position: relative;
         cursor: pointer;
       }
-      #coinlist input:checked + label > div {
+      #coinlist input:checked + label > div,
+      .checkbox-styled:checked + label > div {
         border-radius: 0;
         border-top: 0;
         border-left: 0;
@@ -299,6 +310,10 @@ ul {
         transform: rotate(40deg);
         transition: all 0ms ease-in-out;
       }
+        .checkbox-styled:checked + label > div {
+          width: 8px;
+          margin-left: 4px;
+        }
     #tips {
       font-size: 12px;
     }

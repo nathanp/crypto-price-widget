@@ -1,6 +1,8 @@
 /******************
 * APP FUNCTIONALITY
 ******************/
+//access electron from here
+const remote = require('electron').remote;
 //user settings
 const settings = require('electron-settings');
 settings.set('developer', {
@@ -117,6 +119,8 @@ function getSelectedChbox(frm) {
 const ul = document.getElementById('prices'); // Get the list where we will place coins
 const portfolio_ul = document.getElementById('portfolio-list');; 
 const url = 'https://min-api.cryptocompare.com/data/pricemultifull?fsyms='+settings.get('user.coins') +'&tsyms='+base +'&extraParams=crypto-price-widget';
+
+var pinCheck = document.getElementById("pin-to-top");
 
 function initData() {
   fetch(url)
@@ -359,6 +363,15 @@ function updateData() {
                   }
               }
             }); //myChart
+            
+            //Pin to Top - settings check - immediately set checkbox and window to saved state
+            if(settings.get('user.pinToTop') == 'yes') {
+              pinCheck.checked = true;
+              remote.getCurrentWindow().setAlwaysOnTop(true);
+            } else {
+              pinCheck.checked = false; 
+              remote.getCurrentWindow().setAlwaysOnTop(false);
+            }
 
           }); //then
         }  
@@ -432,13 +445,28 @@ document.getElementById('saveQuantities').onclick = function(){
   //location.reload(false);
 }
 
+/***********
+* PIN TO TOP
+*************/
+pinCheck.onclick = function(event) {
+  var window = remote.getCurrentWindow();
+  var checkbox = event.target;
+  if(checkbox.checked) {
+    //Checkbox has been checked
+    window.setAlwaysOnTop(true); //immediately make the change to the window
+    settings.set('user.pinToTop', 'yes');
+  } else {
+    //Checkbox has been unchecked
+    window.setAlwaysOnTop(false);
+    settings.set('user.pinToTop', 'no');
+  }
+};
 
 /*******
 * APP UI
 ********/
 
 //Window controls
-const remote = require('electron').remote;
 document.getElementById("close-btn").addEventListener("click", function (e) {
   var window = remote.getCurrentWindow();
   window.close();

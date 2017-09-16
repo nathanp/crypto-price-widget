@@ -25,6 +25,7 @@ function createWindow () {
   // Create the browser window.
   mainWindow = new electron.BrowserWindow({
     title: app.getName(),
+    alwaysOnTop: false,
     //show: false,
     x: mainWindowState.x,
     y: mainWindowState.y,
