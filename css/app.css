@@ -8,6 +8,10 @@ ul {
   margin: 0;
   padding: 0;
 }
+img {
+  max-width: 100%;
+}
+
 .titlebar {
   -webkit-user-select: none;
   -webkit-app-region: drag;
@@ -20,12 +24,21 @@ ul {
     float: right;
     line-height: 0;
   }
+
 button {
   -webkit-app-region: no-drag;
-  background: none;
-  border: none;
-  outline: none;
+  background-color: #000000;
+  color: #fff;
+  border: 1px solid #252525;
+  padding: 5px 10px;
+  margin: -1px 0px 0px 0px;
+  font-family: 'Inconsolata', monospace;
 }
+  header button {
+    background: none;
+    border: none;
+    outline: none;
+  }
 
 #close-btn,
 #min-btn {
@@ -406,3 +419,19 @@ ul {
       color: white;
       pointer-events: none;
     }
+
+/*Offline*/
+.error {
+  text-align: center;
+}
+  .error h2,
+  .error h4 {
+    font-family: Arial,Helvetica,sans-serif;
+  }
+  .error button.refresh {
+    cursor: pointer;
+    background: #41BB2E;
+    border: none;
+    color: #000;
+    font-weight: bold;
+  }

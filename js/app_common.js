@@ -27,7 +27,7 @@ settings.set('developer', {
   }
 
 (function() {
-
+  // Settings - list of coins
   function loadJSON(callback) {   
     var file = 'https://www.cryptocompare.com/api/data/coinlist/';
     var xobj = new XMLHttpRequest();
@@ -189,12 +189,31 @@ function initData() {
           }); //sortable
 
         }); //response.json
+        updateData();
       } //function(response)
     ) //.then
     .catch(function(err) {  
-      console.log('Fetch Error :-S', err);  
+      console.log('Unable to connect!');
+
+
+      // Parse JSON string into object
+      var mainDiv = document.getElementById("main");
+
+      var errorDiv = document.createElement('div');
+
+      errorDiv.className = 'error';
+
+      errorDiv.innerHTML = '<h2>Uh-oh! Looks like you&#39;re offline.</h2>\
+                            <img src="images/offline_doge.jpg" />\
+                            <h4>Reconnect, then reload the app.</h4>\
+                            <button type="button" class="refresh" onClick="location.reload(false);" >Reload</button>';
+
+       document.getElementById('main').appendChild(errorDiv);
+      
+        
+
     });
-    updateData();
+    
 }
 
 function updateData() {
@@ -268,6 +287,10 @@ function updateData() {
               //console.log(coinDISPLAY);
               let li = document.getElementById("coin-"+[key]),
                   span = document.querySelector("#coin-"+[key]+" span");
+              //when adding a new coin, default sortorder to 999
+              if( li.getAttribute('sortorder')=="undefined" ) {
+                li.setAttribute("sortorder", 999);
+              }
               span.setAttribute("class", "draggable");
               
               let coinSymbol  = coinRAW[base].FROMSYMBOL;
@@ -302,6 +325,16 @@ function updateData() {
                 change.classList.remove("postive");
                 change.classList.remove("negative");
               }
+
+              // Apply Sorting
+              sortChildren(
+                  document.getElementById('prices'),
+                  function(li) { return +li.getAttribute('sortorder') }
+              );
+              sortChildren(
+                  document.getElementById('portfolio-list'),
+                  function(li) { return +li.getAttribute('sortorder') }
+              );
 
               // Portfolio
               let quantityValue   = document.querySelector("#coin-"+[key]+" .quantity-value");
