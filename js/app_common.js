@@ -47,20 +47,27 @@ function append(parent, el) {
 
 const ul = document.getElementById('prices'); // Get the list where we will place coins
 const portfolio_ul = document.getElementById('portfolio-list');; 
-const url = 'https://min-api.cryptocompare.com/data/pricemultifull?fsyms='+settings.get('user.coins') +'&tsyms='+base +'&extraParams=crypto-price-widget';
+var url = 'https://min-api.cryptocompare.com/data/pricemultifull?fsyms='+settings.get('user.coins') +'&tsyms='+base +'&extraParams=crypto-price-widget';
 
 var pinCheck = document.getElementById("pin-to-top");
-
+function clearData() {
+  ul.innerHTML = '';
+  clearTimeout(appRefresh);
+}
 function initData() {
+  //need to redeclare the url variable here to grab the latest user coins, etc.
+  var url = 'https://min-api.cryptocompare.com/data/pricemultifull?fsyms='+settings.get('user.coins') +'&tsyms='+base +'&extraParams=crypto-price-widget';
   fetch(url)
     .then(  
       function(response) {  
         // Examine the response  
         response.json().then(function(data) {
+
+          console.log(url);
           //console.log(data);
           let pricesDISPLAY = data.DISPLAY; // display for everything except coin symbol
           let pricesRAW     = data.RAW; // raw to get "BTC" instead of bitcoin symbol
-          
+
           var i = 0;
           for (let key of Object.keys(pricesDISPLAY)) {
             let coin = pricesDISPLAY[key];
@@ -76,22 +83,20 @@ function initData() {
             //span = document.querySelector("#coin-"+[key]+" span");
             span.setAttribute("class", "draggable");
 
-            li.setAttribute("sortorder", settings.get(li.id+'.order'));
-            //alert(settings.get(li.id+'.order'));
+            //when adding a new coin, default sortorder to 999
+            if( settings.get(li.id+'.order') == null) {
+              settings.set(li.id+'.order', 999);
+              li.setAttribute("sortorder", 999);
+            }
+            else {
+              li.setAttribute("sortorder", settings.get(li.id+'.order'));  
+            }
+            
             append(li, span);
             append(ul, li);
             i++;
           } //for
           //console.log(data.RAW.BTC.USD.PRICE)
-
-          sortChildren(
-              document.getElementById('prices'),
-              function(li) { return +li.getAttribute('sortorder') }
-          );
-          sortChildren(
-              document.getElementById('portfolio-list'),
-              function(li) { return +li.getAttribute('sortorder') }
-          );
 
           //sort your coins
           sortable('#prices', {
@@ -126,6 +131,15 @@ function initData() {
             remote.getCurrentWindow().setAlwaysOnTop(false);
           }
 
+          sortChildren(
+              document.getElementById('prices'),
+              function(li) { return +li.getAttribute('sortorder') }
+          );
+          sortChildren(
+              document.getElementById('portfolio-list'),
+              function(li) { return +li.getAttribute('sortorder') }
+          );
+
         }); //response.json
         updateData();
       } //function(response)
@@ -144,6 +158,8 @@ function initData() {
 }//initData
 
 function updateData() {
+  //need to redeclare the url variable here to grab the latest user coins, etc.
+  var url = 'https://min-api.cryptocompare.com/data/pricemultifull?fsyms='+settings.get('user.coins') +'&tsyms='+base +'&extraParams=crypto-price-widget';
     /*
     ** What data needs to be grabbed/changed?
     ** Base currency
@@ -196,10 +212,7 @@ function updateData() {
               //console.log(coinDISPLAY);
               let li = document.getElementById("coin-"+[key]),
                   span = document.querySelector("#coin-"+[key]+" span");
-              //when adding a new coin, default sortorder to 999
-              if( li.getAttribute('sortorder')=="undefined" ) {
-                li.setAttribute("sortorder", 999);
-              }
+              
               
               let coinSymbol  = coinRAW[base].FROMSYMBOL;
               let coinRate    = coinDISPLAY[base].PRICE.replace(/ /g,''); //.replace(/ /g,'') removes space after $
@@ -238,8 +251,10 @@ function updateData() {
               let quantityValue   = document.querySelector("#coin-"+[key]+" .quantity-value");
               let quantityNumber  = settings.get('quantity.'+[key]);
               let regp = /[^0-9.-]+/g;
-              let quantityTotal   = parseFloat(coinRate.replace(regp, '')) * parseFloat(quantityNumber.replace(regp, ''));
-
+              if(quantityNumber != null) {
+                quantityTotal   = parseFloat(coinRate.replace(regp, '')) * parseFloat(quantityNumber.replace(regp, ''));  
+              }
+              
               // sum of all total coin values
               portfolioSum += quantityTotal;
               // put sum into the markup
@@ -251,7 +266,7 @@ function updateData() {
                 quantityValue.innerHTML = quantityTotal.toFixed(8);
                 portfolioTotalValue.innerHTML = portfolioSum.toFixed(8);
               }
-              else {
+              else if(quantityValue != null) {
                 //standard currency format
                 quantityValue.innerHTML = quantityTotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
                 portfolioTotalValue.innerHTML = portfolioSum.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
@@ -293,7 +308,7 @@ function updateData() {
           }); //response.json().then
         } //function(response)
       ) //then
-    setTimeout(function(){updateData()}, 5000); // run this once every 5 seconds
+    appRefresh = setTimeout(function(){updateData()}, 5000); // run this once every 5 seconds
 } //updateData()
 
 // Let's do this thing!
@@ -307,9 +322,10 @@ document.getElementById('saveCoins').onclick = function(){
   settings.set('user.coins', selchb);
 
   // just reloading the entire app because I have yet to figure out how to add/remove a coin from the primary list without a page reload
-  location.reload(false);
-
-  //alert(settings.get('user.currency'));
+  //location.reload(false);
+  
+  clearData();
+  initData();
 }
 
 /***********
@@ -336,7 +352,7 @@ for (let key of Object.keys(portfolio_list)) {
   }
   else {
     inputValue = '0';
-    inputValue = settings.set('quantity.'+[coin], '0');
+    settings.set('quantity.'+[coin], '0');
   }
 
   span.innerHTML = '<span class="sym">' + coin + '</span> <span class="block quantity"><label for="quantity.' + coin +'">Quantity</label> <input type="number" name="quantity.' + coin +'" min="0" value="'+inputValue+'" step=".01"></span> <span class="block value"><label>Current Value</label><span class="quantity-value"></span></span>';
