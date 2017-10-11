@@ -1,6 +1,40 @@
+/*Fonts*/
+@font-face {
+    font-family: 'heeboregular';
+    src: url('../fonts/heebo-regular-webfont.woff2') format('woff2'),
+         url('../fonts/heebo-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'heebothin';
+    src: url('../fonts/heebo-thin-webfont.woff2') format('woff2'),
+         url('../fonts/heebo-thin-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'inconsolataregular';
+    src: url('../fonts/inconsolata-regular-webfont.woff2') format('woff2'),
+         url('../fonts/inconsolata-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body,
+button,
+#myInput,
+#saveCoins,
+#saveQuantities {
+  font-family: 'inconsolataregular', monospace;
+}
+.coin-list li .sym {
+  font-family: 'heeboregular', sans-serif;
+}
+
+
 body {
   background: rgba(0, 0, 0, 0.95);
-  font-family: 'Inconsolata', monospace;
   color: #fff;
   margin-top: 5px;
 }
@@ -146,7 +180,6 @@ ul {
         border: 1px solid #252525;
         border-left-width: 2px;
         padding: 0px 5px 0px;
-        font-family: 'Heebo', sans-serif;
         font-size: 12px;
       }
         .coin-list li .sym:hover {

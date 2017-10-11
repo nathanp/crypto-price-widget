@@ -5,94 +5,37 @@
 const remote = require('electron').remote;
 //user settings
 const settings = require('electron-settings');
-settings.set('developer', {
-  first: 'Nathan',
-  last: 'Parikh'
-});
-  //default coins
-  if(settings.has('user.coins')) {
-    //do nothing because coins already set
-  }
-  else {
-     settings.set('user', {
-      coins: 'BTC,ETH,LTC'
-    });
-  }
-  //default base currency
-  if(settings.has('user.currency')) {
-    //do nothing because currency already set
-  }
-  else {
-     settings.set('user.currency', 'USD');
-  }
 
-(function() {
-  // Settings - list of coins
-  function loadJSON(callback) {   
-    var file = 'https://www.cryptocompare.com/api/data/coinlist/';
-    var xobj = new XMLHttpRequest();
-        xobj.overrideMimeType("application/json");
-        xobj.open('GET', file, true);
-        xobj.onreadystatechange = function () {
-          if (xobj.readyState == 4 && xobj.status == "200") {
-            // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
-            callback(xobj.responseText);
-          }
-        };
-        xobj.send(null);  
-  } //loadJSON
+//default coins
+if(settings.has('user.coins')) {
+  //do nothing because coins already set
+}
+else {
+  settings.set('user', {
+    coins: 'BTC,ETH,LTC'
+  });
+}
+//default base currency
+if(settings.has('user.currency')) {
+  //do nothing because currency already set
+}
+else {
+  settings.set('user.currency', 'USD');
+}
 
-  // Generate the list of all coins
-  loadJSON(function(response) {
-    // Parse JSON string into object
-    var myDiv = document.getElementById("coinlist");
-    var actual_JSON = JSON.parse(response);
-    //alert(settings.get('user.coins'));
-    //console.log(actual_JSON.Data);
-    
-    //loop through data, get coin info, generate checkbox for each coin
-    Object.keys(actual_JSON.Data).forEach(function(key) {
-      //console.log(actual_JSON.Data[key].Name);
-      //console.log(actual_JSON.Data[key].CoinName);
-      var li = document.createElement("li");
-      var checkBox = document.createElement("input");
-        checkBox.className = "coinCode";
-      var label = document.createElement("label");
-        label.className = "coinName";
-      var div = document.createElement("div");
-      checkBox.type = "checkbox";
-      checkBox.value = actual_JSON.Data[key].Name;
-      checkBox.name = "cl[]";
-      //check the coins the user has already set
-      var str = String(settings.get('user.coins'));
-      var split_str = str.split(",");
-      if (split_str.indexOf(actual_JSON.Data[key].Name) !== -1) {
-          checkBox.checked = true;
-      }
-      myDiv.appendChild(li);
-      li.appendChild(checkBox);
-      li.appendChild(label);
-      label.appendChild(document.createTextNode(actual_JSON.Data[key].CoinName));
-      label.appendChild(document.createTextNode(' ('+actual_JSON.Data[key].Name+')'));
-      label.appendChild(div);
-    }); //forEach
-    
-  }); //loadJSON
- 
-  base = settings.get('user.currency'); // get the user's base currency
-  var currSel = document.getElementById('base'); //select the currency select box
-  currSel.value = settings.get('user.currency'); //select the option that corresponds to the user's currency
-  setBase = function() {
-    //selected base currency
-    var sel = document.getElementById('base');
-    var x   = sel.selectedIndex;
-    var y   = sel.options;
-    base    = y[x].text;
-    settings.set('user.currency', base); //save the user's selection
-    updateData(); //immediately reflect the changed currency
-  };
-  
-})();
+/* Base Currency */
+base = settings.get('user.currency'); // get the user's base currency
+var currSel = document.getElementById('base'); //select the currency select box
+currSel.value = settings.get('user.currency'); //select the option that corresponds to the user's currency
+setBase = function() {
+  //selected base currency
+  var sel = document.getElementById('base');
+  var x   = sel.selectedIndex;
+  var y   = sel.options;
+  base    = y[x].text;
+  settings.set('user.currency', base); //save the user's selection
+  updateData(); //immediately reflect the changed currency
+};
 
 //Functions for creating/appending elements
 function createNode(element) {
@@ -100,20 +43,6 @@ function createNode(element) {
 }
 function append(parent, el) {
   return parent.appendChild(el);
-}
-
-
-// Returns an array with values of the selected (checked) checkboxes in "frm"
-function getSelectedChbox(frm) {
-  var selchbox = []; // array that will store the value of selected checkboxes
-  // gets all the input tags in frm, and their number
-  var inpfields = frm.getElementsByTagName('input');
-  var nr_inpfields = inpfields.length;
-  // traverse the inpfields elements, and adds the value of selected (checked) checkbox in selchbox
-  for(var i=0; i<nr_inpfields; i++) {
-    if(inpfields[i].type == 'checkbox' && inpfields[i].checked == true) selchbox.push(inpfields[i].value);
-  }
-  return selchbox;
 }
 
 const ul = document.getElementById('prices'); // Get the list where we will place coins
@@ -126,19 +55,15 @@ function initData() {
   fetch(url)
     .then(  
       function(response) {  
-        if (response.status !== 200) {  
-          console.log('Looks like there was a problem. Status Code: ' +  
-            response.status);  
-          return;  
-        }
-
         // Examine the response  
         response.json().then(function(data) {
           //console.log(data);
-          let prices = data.DISPLAY;
+          let pricesDISPLAY = data.DISPLAY; // display for everything except coin symbol
+          let pricesRAW     = data.RAW; // raw to get "BTC" instead of bitcoin symbol
+          
           var i = 0;
-          for (let key of Object.keys(prices)) {
-            let coin = prices[key];
+          for (let key of Object.keys(pricesDISPLAY)) {
+            let coin = pricesDISPLAY[key];
             //console.log(coin);
             let li    = createNode('li'),
                 span  = createNode('span');
@@ -147,6 +72,10 @@ function initData() {
             li.setAttribute("id", "coin-"+[key]);
             //alert("coin-"+[key])
             //console.log(settings.get('coin.'+[key]+'.order'));
+
+            //span = document.querySelector("#coin-"+[key]+" span");
+            span.setAttribute("class", "draggable");
+
             li.setAttribute("sortorder", settings.get(li.id+'.order'));
             //alert(settings.get(li.id+'.order'));
             append(li, span);
@@ -188,49 +117,48 @@ function initData() {
             //alert(settings.get('coin.'+e+'.order'));
           }); //sortable
 
+          //Pin to Top - settings check - immediately set checkbox and window to saved state
+          if(settings.get('user.pinToTop') == 'yes') {
+            pinCheck.checked = true;
+            remote.getCurrentWindow().setAlwaysOnTop(true);
+          } else {
+            pinCheck.checked = false; 
+            remote.getCurrentWindow().setAlwaysOnTop(false);
+          }
+
         }); //response.json
         updateData();
       } //function(response)
     ) //.then
     .catch(function(err) {  
       console.log('Unable to connect!');
-
-
-      // Parse JSON string into object
       var mainDiv = document.getElementById("main");
-
       var errorDiv = document.createElement('div');
-
       errorDiv.className = 'error';
-
       errorDiv.innerHTML = '<h2>Uh-oh! Looks like you&#39;re offline.</h2>\
                             <img src="images/offline_doge.jpg" />\
                             <h4>Reconnect, then reload the app.</h4>\
                             <button type="button" class="refresh" onClick="location.reload(false);" >Reload</button>';
-
        document.getElementById('main').appendChild(errorDiv);
-      
-        
-
-    });
-    
-}
+    });//catch
+}//initData
 
 function updateData() {
+    /*
+    ** What data needs to be grabbed/changed?
+    ** Base currency
+    ** Coin price
+    ** % change
+    ** Portfolio - Coin price affects current value / total
+    */
     //console.log(settings.get('user.coins'));
-    const url = 'https://min-api.cryptocompare.com/data/pricemultifull?fsyms='+settings.get('user.coins') +'&tsyms='+base +'&extraParams=crypto-price-widget';
     fetch(url)
       .then(
         function(response) {  
-          if (response.status !== 200) {  
-            console.log('Looks like there was a problem. Status Code: ' +  
-              response.status);  
-            return;  
-          }
           // Examine the text in the response  
           response.json().then(function(data) { 
             let pricesDISPLAY = data.DISPLAY; // display for everything except coin symbol
-            let pricesRAW     = data.RAW; // raw to get BTC instead of bitcoin symbol
+            let pricesRAW     = data.RAW; // raw to get "BTC" instead of bitcoin symbol
             let portfolioSum  = 0;
 
             // Chart labels
@@ -260,25 +188,6 @@ function updateData() {
                 '#C2185B',
                 '#fff'
             ];
-            //randomize
-            function shuffle(array) {
-              var currentIndex = array.length, temporaryValue, randomIndex;
-
-              // While there remain elements to shuffle...
-              while (0 !== currentIndex) {
-
-                // Pick a remaining element...
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex -= 1;
-
-                // And swap it with the current element.
-                temporaryValue = array[currentIndex];
-                array[currentIndex] = array[randomIndex];
-                array[randomIndex] = temporaryValue;
-              }
-
-              return array;
-            }
 
             for (let key of Object.keys(pricesRAW)) {
               let coinDISPLAY = pricesDISPLAY[key];
@@ -291,7 +200,6 @@ function updateData() {
               if( li.getAttribute('sortorder')=="undefined" ) {
                 li.setAttribute("sortorder", 999);
               }
-              span.setAttribute("class", "draggable");
               
               let coinSymbol  = coinRAW[base].FROMSYMBOL;
               let coinRate    = coinDISPLAY[base].PRICE.replace(/ /g,''); //.replace(/ /g,'') removes space after $
@@ -326,16 +234,6 @@ function updateData() {
                 change.classList.remove("negative");
               }
 
-              // Apply Sorting
-              sortChildren(
-                  document.getElementById('prices'),
-                  function(li) { return +li.getAttribute('sortorder') }
-              );
-              sortChildren(
-                  document.getElementById('portfolio-list'),
-                  function(li) { return +li.getAttribute('sortorder') }
-              );
-
               // Portfolio
               let quantityValue   = document.querySelector("#coin-"+[key]+" .quantity-value");
               let quantityNumber  = settings.get('quantity.'+[key]);
@@ -366,11 +264,6 @@ function updateData() {
               
             } //for
 
-            sortChildren(
-              document.getElementById('portfolio-list'),
-              function(li) { return +li.getAttribute('sortorder') }
-          );
-
             var newChartLabels = chartLabels;
            
             // Chart
@@ -397,26 +290,15 @@ function updateData() {
               }
             }); //myChart
             
-            //Pin to Top - settings check - immediately set checkbox and window to saved state
-            if(settings.get('user.pinToTop') == 'yes') {
-              pinCheck.checked = true;
-              remote.getCurrentWindow().setAlwaysOnTop(true);
-            } else {
-              pinCheck.checked = false; 
-              remote.getCurrentWindow().setAlwaysOnTop(false);
-            }
-
-          }); //then
-        }  
-      )
+          }); //response.json().then
+        } //function(response)
+      ) //then
     setTimeout(function(){updateData()}, 5000); // run this once every 5 seconds
-}
+} //updateData()
 
 // Let's do this thing!
 initData();
 
-/* Test this function */
-//document.getElementById('firstname').innerHTML = settings.get('user.coins');
 // Click on #saveCoins, save the coin selection to the user
 document.getElementById('saveCoins').onclick = function(){
   var coinForm = document.getElementById('coinlist');
@@ -476,6 +358,74 @@ document.getElementById('saveQuantities').onclick = function(){
 
   // just reloading the entire app because I have yet to figure out how to add/remove a coin from the primary list without a page reload
   //location.reload(false);
+}
+
+/***********
+* SETTINGS
+***********/
+// Settings - list of coins
+  function loadJSON(callback) {   
+    var file = 'https://www.cryptocompare.com/api/data/coinlist/';
+    var xobj = new XMLHttpRequest();
+        xobj.overrideMimeType("application/json");
+        xobj.open('GET', file, true);
+        xobj.onreadystatechange = function () {
+          if (xobj.readyState == 4 && xobj.status == "200") {
+            // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+            callback(xobj.responseText);
+          }
+        };
+        xobj.send(null);  
+  } //loadJSON
+
+  // Generate the list of all coins
+  loadJSON(function(response) {
+    // Parse JSON string into object
+    var myDiv = document.getElementById("coinlist");
+    var actual_JSON = JSON.parse(response);
+    //alert(settings.get('user.coins'));
+    //console.log(actual_JSON.Data);
+    
+    //loop through data, get coin info, generate checkbox for each coin
+    Object.keys(actual_JSON.Data).forEach(function(key) {
+      //console.log(actual_JSON.Data[key].Name);
+      //console.log(actual_JSON.Data[key].CoinName);
+      var li = document.createElement("li");
+      var checkBox = document.createElement("input");
+        checkBox.className = "coinCode";
+      var label = document.createElement("label");
+        label.className = "coinName";
+      var div = document.createElement("div");
+      checkBox.type = "checkbox";
+      checkBox.value = actual_JSON.Data[key].Name;
+      checkBox.name = "cl[]";
+      //check the coins the user has already set
+      var str = String(settings.get('user.coins'));
+      var split_str = str.split(",");
+      if (split_str.indexOf(actual_JSON.Data[key].Name) !== -1) {
+          checkBox.checked = true;
+      }
+      myDiv.appendChild(li);
+      li.appendChild(checkBox);
+      li.appendChild(label);
+      label.appendChild(document.createTextNode(actual_JSON.Data[key].CoinName));
+      label.appendChild(document.createTextNode(' ('+actual_JSON.Data[key].Name+')'));
+      label.appendChild(div);
+    }); //forEach
+    
+  }); //loadJSON
+
+// Returns an array with values of the selected (checked) checkboxes in "frm"
+function getSelectedChbox(frm) {
+  var selchbox = []; // array that will store the value of selected checkboxes
+  // gets all the input tags in frm, and their number
+  var inpfields = frm.getElementsByTagName('input');
+  var nr_inpfields = inpfields.length;
+  // traverse the inpfields elements, and adds the value of selected (checked) checkbox in selchbox
+  for(var i=0; i<nr_inpfields; i++) {
+    if(inpfields[i].type == 'checkbox' && inpfields[i].checked == true) selchbox.push(inpfields[i].value);
+  }
+  return selchbox;
 }
 
 /***********
