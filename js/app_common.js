@@ -226,7 +226,7 @@ function updateData() {
               //console.log(span);
               span.innerHTML = '<span class="sym">' + coinSymbol + '</span> ' + coinRate + '<span class="change">' + coinDISPLAYchange + '%</span>'; 
 
-              //Price Alert Test
+              //Price Alert Test - PRO Feature
               /*
               * Choose crypto
               * Choose price

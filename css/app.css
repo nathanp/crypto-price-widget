@@ -115,9 +115,11 @@ button {
 .tabs button,
 .tabs button.active {
   display: inline-block;
+  vertical-align: top;
 }
 .tabs button img {
-  width: 19px;
+  width: 16px;
+  height: 16px;
   opacity: 0.5;
   -webkit-transition: all 150ms ease;
   -moz-transition: all 150ms ease;
