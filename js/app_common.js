@@ -369,56 +369,58 @@ document.getElementById('saveQuantities').onclick = function(){
 * SETTINGS
 ***********/
 // Settings - list of coins
-  function loadJSON(callback) {   
-    var file = 'https://www.cryptocompare.com/api/data/coinlist/';
-    var xobj = new XMLHttpRequest();
-        xobj.overrideMimeType("application/json");
-        xobj.open('GET', file, true);
-        xobj.onreadystatechange = function () {
-          if (xobj.readyState == 4 && xobj.status == "200") {
-            // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
-            callback(xobj.responseText);
-          }
-        };
-        xobj.send(null);  
-  } //loadJSON
+function loadJSON(callback) {   
+  var file = 'https://www.cryptocompare.com/api/data/coinlist/';
+  var xobj = new XMLHttpRequest();
+      xobj.overrideMimeType("application/json");
+      xobj.open('GET', file, true);
+      xobj.onreadystatechange = function () {
+        if (xobj.readyState == 4 && xobj.status == "200") {
+          // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+          callback(xobj.responseText);
+        }
+      };
+      xobj.send(null);  
+} //loadJSON
 
-  // Generate the list of all coins
-  loadJSON(function(response) {
-    // Parse JSON string into object
-    var myDiv = document.getElementById("coinlist");
-    var actual_JSON = JSON.parse(response);
-    //alert(settings.get('user.coins'));
-    //console.log(actual_JSON.Data);
-    
-    //loop through data, get coin info, generate checkbox for each coin
-    Object.keys(actual_JSON.Data).forEach(function(key) {
-      //console.log(actual_JSON.Data[key].Name);
-      //console.log(actual_JSON.Data[key].CoinName);
-      var li = document.createElement("li");
-      var checkBox = document.createElement("input");
-        checkBox.className = "coinCode";
-      var label = document.createElement("label");
-        label.className = "coinName";
-      var div = document.createElement("div");
-      checkBox.type = "checkbox";
-      checkBox.value = actual_JSON.Data[key].Name;
-      checkBox.name = "cl[]";
-      //check the coins the user has already set
-      var str = String(settings.get('user.coins'));
-      var split_str = str.split(",");
-      if (split_str.indexOf(actual_JSON.Data[key].Name) !== -1) {
-          checkBox.checked = true;
-      }
-      myDiv.appendChild(li);
-      li.appendChild(checkBox);
-      li.appendChild(label);
-      label.appendChild(document.createTextNode(actual_JSON.Data[key].CoinName));
-      label.appendChild(document.createTextNode(' ('+actual_JSON.Data[key].Name+')'));
-      label.appendChild(div);
-    }); //forEach
-    
-  }); //loadJSON
+// Generate the list of all coins
+loadJSON(function(response) {
+  // Parse JSON string into object
+  var myDiv = document.getElementById("coinlist");
+  var actual_JSON = JSON.parse(response);
+  //alert(settings.get('user.coins'));
+  //console.log(actual_JSON.Data);
+  
+  //loop through data, get coin info, generate checkbox for each coin
+  Object.keys(actual_JSON.Data).forEach(function(key) {
+    //console.log(actual_JSON.Data[key].Name);
+    //console.log(actual_JSON.Data[key].CoinName);
+    var li = document.createElement("li");
+    var checkBox = document.createElement("input");
+      checkBox.className = "coinCode";
+    var label = document.createElement("label");
+      label.className = "coinName";
+    var div = document.createElement("div");
+    checkBox.type = "checkbox";
+    checkBox.value = actual_JSON.Data[key].Name;
+    checkBox.id = actual_JSON.Data[key].Name;
+    label.htmlFor = actual_JSON.Data[key].Name;
+    checkBox.name = "cl[]";
+    //check the coins the user has already set
+    var str = String(settings.get('user.coins'));
+    var split_str = str.split(",");
+    if (split_str.indexOf(actual_JSON.Data[key].Name) !== -1) {
+        checkBox.checked = true;
+    }
+    myDiv.appendChild(li);
+    li.appendChild(checkBox);
+    li.appendChild(label);
+    label.appendChild(document.createTextNode(actual_JSON.Data[key].CoinName));
+    label.appendChild(document.createTextNode(' ('+actual_JSON.Data[key].Name+')'));
+    label.appendChild(div);
+  }); //forEach
+  
+}); //loadJSON
 
 // Returns an array with values of the selected (checked) checkboxes in "frm"
 function getSelectedChbox(frm) {

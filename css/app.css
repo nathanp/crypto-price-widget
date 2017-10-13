@@ -36,7 +36,7 @@ button,
 body {
   background: rgba(0, 0, 0, 0.95);
   color: #fff;
-  margin-top: 5px;
+  margin-top: 35px;
 }
 ul {
   margin: 0;
@@ -50,6 +50,13 @@ img {
   -webkit-user-select: none;
   -webkit-app-region: drag;
   opacity: 0;
+  position: fixed;
+  width: 94%;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.95);
+  top: 0;
+  left: 0;
+  padding: 8px 3% 3px;
 }
   .titlebar:hover {
     opacity: 1;
@@ -66,7 +73,6 @@ button {
   border: 1px solid #252525;
   padding: 5px 10px;
   margin: -1px 0px 0px 0px;
-  font-family: 'Inconsolata', monospace;
 }
   header button {
     background: none;
@@ -184,6 +190,14 @@ ul {
       }
         .coin-list li .sym:hover {
           cursor: -webkit-grab;
+          border-top-color: #4c4c4c;
+          border-right-color: #4c4c4c;
+          border-bottom-color: #4c4c4c;
+          -webkit-transition: all 250ms ease;
+          -moz-transition: all 250ms ease;
+          -ms-transition: all 250ms ease;
+          -o-transition: all 250ms ease;
+          transition: all 250ms ease;
         }
         /*Symbol Colors*/
         .coin-list li#coin-BTC .sym {
@@ -270,7 +284,6 @@ ul {
       margin-top: 5px;
     }
     #myInput {
-      font-family: 'Inconsolata', monospace;
       border: none;
       padding: 0px 0px 10px;
       font-size: 14px;
@@ -288,7 +301,6 @@ ul {
       border: 1px solid #252525;
       padding: 5px 10px;
       margin: -1px 0px 0px 0px;
-      font-family: 'Inconsolata', monospace;
     }
     #coinlist {
       margin: 15px 0px 0px 0px;
@@ -309,15 +321,18 @@ ul {
 
       #coinlist label,
       .checkbox-styled-label {
-        height: auto;
-        width: 100%;
+        height: 18px;
         z-index: 0;
         display: inline-block;
         position: absolute;
         top: 0;
         left: 0;
         text-indent: 24px;
+        overflow: hidden;
       }
+        #coinlist label {
+          cursor: pointer;
+        }
       #coinlist label div,
       .checkbox-styled-label div {
         height: 12px;
@@ -329,6 +344,11 @@ ul {
         transition: all 0ms ease-in-out, border 0ms ease 0ms;
         position: absolute;
         top: 0;
+        -webkit-transition: all 250ms ease;
+        -moz-transition: all 250ms ease;
+        -ms-transition: all 250ms ease;
+        -o-transition: all 250ms ease;
+        transition: all 250ms ease;
       }
         #coinlist input:hover + label div,
         .checkbox-styled:hover + label div {
@@ -404,9 +424,12 @@ ul {
 
     ::-webkit-scrollbar-thumb:window-inactive,
     ::-webkit-scrollbar-thumb {
-      background:  #252525;
+      background-color:  #252525;
       -webkit-border-radius: 100px;
     }
+       ::-webkit-scrollbar-thumb:hover {
+        background-color: #4c4c4c;
+       }
 
     /*Select Boxes*/
     .custom-select {
