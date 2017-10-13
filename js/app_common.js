@@ -226,6 +226,31 @@ function updateData() {
               //console.log(span);
               span.innerHTML = '<span class="sym">' + coinSymbol + '</span> ' + coinRate + '<span class="change">' + coinDISPLAYchange + '%</span>'; 
 
+              //Price Alert Test
+              /*
+              * Choose crypto
+              * Choose price
+              * Choose equals, greater than, or less than price
+              * Alert set to "on"
+              * Alert when matches conditions
+              * When click on notification, alert set to "off"
+              * Use electron settings, localStorage, or sessionStorage?
+              * Should this be included in the updateData or separate?
+              */
+
+              /*
+              var alerted = localStorage.getItem('alerted') || '';
+              if(coinSymbol.includes("BTC") && coinRAW[base].PRICE >= "5723" && alerted != 'yes') { 
+                let notif = new window.Notification('Price Alert', {
+                  body: "BTC has gone above 5790!"
+                });
+                notif.onclick = () => {
+                  //so it doesn't keep notifying us every 3 seconds.
+                  localStorage.setItem('alerted','yes');
+                }
+              }
+             */
+              
               // % Change
               let change = document.querySelector("#coin-"+[key]+" .change");
               if(coinDISPLAYchange > 0) {
@@ -370,7 +395,8 @@ document.getElementById('saveQuantities').onclick = function(){
 ***********/
 // Settings - list of coins
 function loadJSON(callback) {   
-  var file = 'https://www.cryptocompare.com/api/data/coinlist/';
+  //Stored local version of https://www.cryptocompare.com/api/data/coinlist/ for performance
+  var file = './coinlist.json';
   var xobj = new XMLHttpRequest();
       xobj.overrideMimeType("application/json");
       xobj.open('GET', file, true);
@@ -381,6 +407,7 @@ function loadJSON(callback) {
         }
       };
       xobj.send(null);  
+  
 } //loadJSON
 
 // Generate the list of all coins

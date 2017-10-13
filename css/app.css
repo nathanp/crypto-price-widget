@@ -90,6 +90,11 @@ button {
   -webkit-border-radius: 50px;
   border-radius: 50px;
   padding: 0;
+  -webkit-transition: all 150ms ease;
+  -moz-transition: all 150ms ease;
+  -ms-transition: all 150ms ease;
+  -o-transition: all 150ms ease;
+  transition: all 150ms ease;
 }
 #close-btn {
   border-color: #ff2626;
@@ -114,6 +119,11 @@ button {
 .tabs button img {
   width: 19px;
   opacity: 0.5;
+  -webkit-transition: all 150ms ease;
+  -moz-transition: all 150ms ease;
+  -ms-transition: all 150ms ease;
+  -o-transition: all 150ms ease;
+  transition: all 150ms ease;
 }
   .tabs button:hover img,
   .tabs button.active img {
@@ -260,7 +270,7 @@ ul {
         }
       .coin-list li .change {
         padding: 2px 3px 2px;
-        font-size: 12px;
+        font-size: 14px;
         float: right;
         margin: 10px 0px 0px;
         background: #000;
