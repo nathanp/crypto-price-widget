@@ -1,8 +1,7 @@
 const electron = require("electron");
-// Module to control application life.
-const app = electron.app;
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow;
+// app control, application life.BrowserWindow creates native browser window.
+const { app, BrowserWindow } = require("electron");
+
 //Store Window size and position
 const windowStateKeeper = require("electron-window-state");
 
@@ -13,7 +12,7 @@ const settings = require("electron-settings");
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow;
+let mainWindow = null;
 
 function createWindow() {
   // Load the previous state with fallback to defaults
@@ -22,10 +21,7 @@ function createWindow() {
     defaultHeight: 240,
   });
   // Create the browser window.
-  mainWindow = new electron.BrowserWindow({
-    webPreferences: {
-      nodeIntegration: true,
-    },
+  mainWindow = new BrowserWindow({
     title: app.getName(),
     alwaysOnTop: false,
     //show: false,
@@ -42,7 +38,10 @@ function createWindow() {
     titleBarStyle: "customButtonsOnHover",
     autoHideMenuBar: true,
     transparent: true,
-    icon: "images/icon.png",
+    icon: path.join(__dirname, "images/icon.png"),
+    webPreferences: {
+      nodeIntegration: true,
+    },
   });
 
   // Let us register listeners on the window, so we can update the state
