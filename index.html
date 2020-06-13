@@ -77,6 +77,11 @@
         <li>DOGE: DFHBdwUbcvGezfgHHbWmH8eLWjAjUhFSZ2</li>
       </ul>
 
+      <h4>Build Info</h4>
+      node <script>document.write(process.versions.node)</script>,
+      Chrome <script>document.write(process.versions.chrome)</script>,
+      and Electron <script>document.write(process.versions.electron)</script>.
+
     </div><!-- #settings -->
 
     <div id="portfolio" class="panel">
@@ -92,10 +97,6 @@
 
       <div id="portfolio-total-value">Total Value: <span class="value"></span></div>
 
-      <div class="chart-container" style="position: relative; height:40vh; width:94vw">
-        <canvas id="portfolioChart" width="360" height="360"></canvas>
-      </div>
-
       <!-- show what % each coin is of portfolio -->
 
       <!-- Enter avg. purchase price for each coin -->
@@ -110,5 +111,4 @@
   </script>
   <script src="js/app_common.js"></script>
   <script src="js/html.sortable.min.js"></script>
-  <script src="js/Chart.min.js"></script>
 </html>
