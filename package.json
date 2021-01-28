@@ -22,7 +22,7 @@
   "author": "Nathan Parikh",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^9.0.4",
+    "electron": "^9.4.0",
     "electron-packager": "^14.2.1",
     "electron-winstaller": "^4.0.0"
   },
