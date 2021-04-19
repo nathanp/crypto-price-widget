@@ -176,7 +176,7 @@ function updateData() {
     "&tsyms=" +
     base +
     ",USD&extraParams=crypto-price-widget";
-  console.log(url)
+
   /*
    ** What data needs to be grabbed/changed?
    ** Base currency
