@@ -52,6 +52,7 @@ var url =
   base +
   "&extraParams=crypto-price-widget";
 var pinCheck = document.getElementById("pin-to-top");
+var alwaysShowUsd = document.getElementById("always-show-usd");
 
 function clearData() {
   ul.innerHTML = "";
@@ -134,6 +135,13 @@ function initData() {
             remote.getCurrentWindow().setAlwaysOnTop(false);
           }
 
+          //Always show USD - settings check - immediately set checkbox and window to saved state
+          if (settings.get("user.alwaysShowUsd") == "yes") {
+            alwaysShowUsd.checked = true;
+          } else {
+            alwaysShowUsd.checked = false;
+          }
+
           sortChildren(document.getElementById("prices"), function (li) {
             return +li.getAttribute("sortorder");
           });
@@ -167,7 +175,8 @@ function updateData() {
     settings.get("user.coins") +
     "&tsyms=" +
     base +
-    "&extraParams=crypto-price-widget";
+    ",USD&extraParams=crypto-price-widget";
+  console.log(url)
   /*
    ** What data needs to be grabbed/changed?
    ** Base currency
@@ -194,7 +203,10 @@ function updateData() {
 
           let coinSymbol = coinRAW[base].FROMSYMBOL;
           let coinRate = coinDISPLAY[base].PRICE.replace(/ /g, ""); //.replace(/ /g,'') removes space after $
-
+          if (base != "USD" && settings.get("user.alwaysShowUsd") == "yes") { // display also prices in USD
+            coinRate = coinRate + (" <small>($") + coinRAW["USD"].PRICE.toFixed(4) + ")</small>"
+          }
+          
           //replace currencies that have no symbols with easier to read formats
           if (coinRate.includes("AUD")) {
             coinRate = coinRate.replace("AUD", "A$");
@@ -473,6 +485,18 @@ pinCheck.onclick = function (event) {
     settings.set("user.pinToTop", "no");
   }
 };
+
+/***********
+ * ALWAYS SHOW USD
+ *************/
+alwaysShowUsd.onclick = function (event) {
+  var checkbox = event.target;
+  if (checkbox.checked) {
+    settings.set("user.alwaysShowUsd", "yes")
+  } else {
+    settings.set("user.alwaysShowUsd", "no")
+  }
+}
 
 /*******
  * APP UI
