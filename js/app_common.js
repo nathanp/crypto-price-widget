@@ -203,8 +203,9 @@ function updateData() {
 
           let coinSymbol = coinRAW[base].FROMSYMBOL;
           let coinRate = coinDISPLAY[base].PRICE.replace(/ /g, ""); //.replace(/ /g,'') removes space after $
+          
           if (base != "USD" && settings.get("user.alwaysShowUsd") == "yes") { // display also prices in USD
-            coinRate = coinRate + (" <small>($") + coinRAW["USD"].PRICE.toFixed(4) + ")</small>"
+            coinRate = coinRate + " <small>($" + coinRAW["USD"].PRICE.toFixed(4) + ")</small>"
           }
           
           //replace currencies that have no symbols with easier to read formats
