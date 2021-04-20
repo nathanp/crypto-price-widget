@@ -171,7 +171,7 @@ ul {
       .coin-list li span.draggable {
         width: 100%;
       }
-      .coin-list input[type="number"] {
+      .coin-list input[type="number"], .update-interval {
         border: none;
         padding: 5px;
         background: rgba(0, 0, 0, 0);
