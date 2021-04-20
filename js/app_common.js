@@ -6,6 +6,17 @@ const remote = require("electron").remote;
 //user settings
 const settings = require("electron-settings");
 
+// update interval
+var appRefresh; // refresh timer handle
+var update_interval = 5;
+var update_interval_element = document.getElementById("update-interval")
+if (settings.has("user.updateInterval")) {
+  update_interval = settings.get("user.updateInterval");
+  update_interval_element.value = update_interval;
+} else {
+  settings.set("user.updateInterval", update_interval); // 5 seconds by default
+}
+
 //default coins
 if (settings.has("user.coins")) {
   //do nothing because coins already set
@@ -311,10 +322,15 @@ function updateData() {
       }); //response.json().then
     } //function(response)
   ); //then
+  refreshUpdateInterval()
+} //updateData()
+
+function refreshUpdateInterval () { // clears timeout and reload prices page
+  clearTimeout(appRefresh); // clears older timeout
   appRefresh = setTimeout(function () {
     updateData();
-  }, 5000); // run this once every 5 seconds
-} //updateData()
+  }, update_interval * 1000); // run this once every user assigned seconds
+}
 
 // Let's do this thing!
 initData();
@@ -473,6 +489,18 @@ pinCheck.onclick = function (event) {
     settings.set("user.pinToTop", "no");
   }
 };
+
+/***********
+ * UPDATE INTERVAL
+ *************/
+update_interval_element.onchange = function (event) { // saves user update interval
+  let input = event.target;
+  input.value = Math.round(input.value);
+  input.value = Math.max(5, Math.min(input.value, 1000)); // clamps between 5 and 1000
+  settings.set("user.updateInterval", input.value);
+  update_interval = input.value;
+  refreshUpdateInterval()
+}
 
 /*******
  * APP UI
