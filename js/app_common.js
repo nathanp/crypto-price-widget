@@ -269,9 +269,9 @@ function updateData() {
             change.classList.remove("negative");
           } else if (coinDISPLAYchange < 0) {
             change.className += " negative";
-            change.classList.remove("postive");
+            change.classList.remove("positive");
           } else {
-            change.classList.remove("postive");
+            change.classList.remove("positive");
             change.classList.remove("negative");
           }
 
