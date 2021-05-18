@@ -1,6 +1,6 @@
 const electron = require("electron");
 // app control, application life.BrowserWindow creates native browser window.
-const { app, BrowserWindow } = require("electron");
+const { app, dialog, BrowserWindow, Menu, Tray } = require("electron");
 
 //Store Window size and position
 const windowStateKeeper = require("electron-window-state");
@@ -58,8 +58,43 @@ function createWindow() {
     })
   );
 
+  // Build and set context menu
+  const appIcon = new Tray(path.join(__dirname, "images/icon.png"))
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Show on Taskbar',
+      click: function () {
+        mainWindow.setSkipTaskbar(false);
+      }
+    },
+    {
+      label: 'Quit',
+      role: 'quit'
+    }
+  ])
+
+  appIcon.setContextMenu(contextMenu);
+
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
+
+  mainWindow.on('show', function () {
+    appIcon.setToolTip('always');
+  });
+
+  mainWindow.on('close', function(event) {
+    const choice = dialog.showMessageBoxSync(mainWindow,
+        {
+          type: 'question',
+          buttons: ['Yes', 'No'],
+          title: 'Confirm',
+          message: 'Would you like to exit to system tray?'
+        });
+    if (choice === 0) {
+      event.preventDefault();
+      mainWindow.setSkipTaskbar(true);
+    }
+  });
 
   // Emitted when the window is closed.
   mainWindow.on("closed", function () {
