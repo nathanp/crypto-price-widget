@@ -182,7 +182,7 @@ ul {
       }
       .coin-list .block {
         display: inline-block;
-        vertical-align: top;
+        vertical-align: middle;
       }
         .coin-list .block label {
           font-size: 12px;
@@ -274,7 +274,7 @@ ul {
         padding: 2px 3px 2px;
         font-size: 14px;
         float: right;
-        margin: 10px 0px 0px;
+        margin: 28px 0px;
         background: #000;
       }
         .coin-list li .change.positive {

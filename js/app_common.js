@@ -21,6 +21,13 @@ if (settings.has("user.currency")) {
   settings.set("user.currency", "USD");
 }
 
+//default secondary currency
+if (settings.has("user.secondaryCurrency")) {
+  //do nothing because secondary currency already set
+} else {
+  settings.set("user.secondaryCurrency", "BTC");
+}
+
 /* Base Currency */
 base = settings.get("user.currency"); // get the user's base currency
 var currSel = document.getElementById("base"); //select the currency select box
@@ -33,6 +40,20 @@ setBase = function () {
   base = y[x].text;
   settings.set("user.currency", base); //save the user's selection
   updateData(); //immediately reflect the changed currency
+};
+
+/* Secondary Currency */
+secondary = settings.get("user.secondaryCurrency"); // get the user's secondary currency
+var currSel = document.getElementById("secondary"); //select the currency select box
+currSel.value = settings.get("user.secondaryCurrency"); //select the option that corresponds to the user's secondary currency
+setSecondary = function () {
+  //selected secondary currency
+  var sel = document.getElementById("secondary");
+  var x = sel.selectedIndex;
+  var y = sel.options;
+  secondary = y[x].text;
+  settings.set("user.secondaryCurrency", secondary); //save the user's selection
+  updateData(); //immediately reflect the changed secondary currency
 };
 
 //Functions for creating/appending elements
@@ -64,7 +85,7 @@ function initData() {
     "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" +
     settings.get("user.coins") +
     "&tsyms=" +
-    base +
+    [base, secondary].join(',') +
     "&extraParams=crypto-price-widget";
   fetch(url)
     .then(
@@ -166,7 +187,7 @@ function updateData() {
     "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" +
     settings.get("user.coins") +
     "&tsyms=" +
-    base +
+    [base, secondary].join(',') +
     "&extraParams=crypto-price-widget";
   /*
    ** What data needs to be grabbed/changed?
@@ -187,6 +208,7 @@ function updateData() {
         for (let key of Object.keys(pricesRAW)) {
           let coinDISPLAY = pricesDISPLAY[key];
           let coinDISPLAYchange = coinDISPLAY[base].CHANGEPCT24HOUR;
+          let secondaryCoinDISPLAYchange = coinDISPLAY[secondary].CHANGEPCT24HOUR;
           let coinRAW = pricesRAW[key];
           //console.log(coinDISPLAY);
           let li = document.getElementById("coin-" + [key]),
@@ -194,6 +216,7 @@ function updateData() {
 
           let coinSymbol = coinRAW[base].FROMSYMBOL;
           let coinRate = coinDISPLAY[base].PRICE.replace(/ /g, ""); //.replace(/ /g,'') removes space after $
+          let secondaryCoinRate = coinDISPLAY[secondary].PRICE.replace(/ /g, ""); //.replace(/ /g,'') removes space after $
 
           //replace currencies that have no symbols with easier to read formats
           if (coinRate.includes("AUD")) {
@@ -227,12 +250,47 @@ function updateData() {
             coinRate = coinRate.replace("ZAR", "R");
           }
 
+          if (secondaryCoinRate.includes("AUD")) {
+            secondaryCoinRate = secondaryCoinRate.replace("AUD", "A$");
+          }
+          if (secondaryCoinRate.includes("CAD")) {
+            secondaryCoinRate = secondaryCoinRate.replace("CAD", "C$");
+          }
+          if (secondaryCoinRate.includes("HKD")) {
+            secondaryCoinRate = secondaryCoinRate.replace("HKD", "HK$");
+          }
+          if (secondaryCoinRate.includes("MXN")) {
+            secondaryCoinRate = secondaryCoinRate.replace("MXN", "$");
+          }
+          if (secondaryCoinRate.includes("NOK")) {
+            secondaryCoinRate = secondaryCoinRate.replace("NOK", "kr");
+          }
+          if (secondaryCoinRate.includes("NZD")) {
+            secondaryCoinRate = secondaryCoinRate.replace("NZD", "NZ$");
+          }
+          if (secondaryCoinRate.includes("SEK")) {
+            secondaryCoinRate = secondaryCoinRate.replace("SEK", "kr");
+          }
+          if (secondaryCoinRate.includes("SGD")) {
+            secondaryCoinRate = secondaryCoinRate.replace("SGD", "S$");
+          }
+          if (secondaryCoinRate.includes("TRY")) {
+            secondaryCoinRate = secondaryCoinRate.replace("TRY", "₺");
+          }
+          if (secondaryCoinRate.includes("ZAR")) {
+            secondaryCoinRate = secondaryCoinRate.replace("ZAR", "R");
+          }
+
           //console.log(span);
           span.innerHTML =
             '<span class="sym">' +
             coinSymbol +
-            "</span> " +
+            "</span>" +
+            ' <div class="block">' +
             coinRate +
+            '<br />' +
+            secondaryCoinRate +
+            '</div>' +
             '<span class="change">' +
             coinDISPLAYchange +
             "%</span>";
